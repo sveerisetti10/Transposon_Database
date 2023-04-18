@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <!--Load the google charts library-->
+        <script src="https://www.gstatic.com/charts/loader.js"></script>
+
+        <!-- load the jQuery library -->
+        <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    </head>
+    <body>
+        <h2>Transposon Order</h2>
+        <h3>Please enter a Species of Interest. Examples include Molerat & Pufferfish</h3>
+        <!-- input for the name of the miRNA of interest -->
+        <input type="text" id="sequence" name="sequence">
+        <!-- button that says “target scores histogram” -->
+        <button id="target_scores">target scores histogram</button><br><br>
+        <!-- div to hold the histogram returned by AJAX -->
+        <div id="histogram"></div>
+
+        <!-- javascript -->
+        <script>
+            function init() {
+                $("#target_scores").click(function () {
+                    let sequence = $("#sequence").val();
+                    $("#histogram").empty();
+                    if (sequence == "") {
+                        alert("There is no text in the miRNA gene text box");
+                    }
+                    google_histogram();
+                });
+            }
+
+            google.charts.load('current', { packages: ['corechart'] });
+            google.charts.setOnLoadCallback(init);
+
+            function google_histogram() {
+                let sequence = $("#sequence").val();
+                $.get("https://bioed.bu.edu/cgi-bin/students_23/sv/search_order.py",
+                    { selector: "histogram", sequence: sequence },
+                    function (product) {
+                        create_histogram(product);
+                    },
+                    "json"
+                ).fail(function (jqXHR, textStatus, errorThrown) {
+                    console.error("Error: " + textStatus + ", " + errorThrown);
+                });
+            }
+
+            function create_histogram(product) {
+                let sequence = $("#sequence").val();
+                if (!Array.isArray(product) || product.length === 0) {
+                    alert(`No data currently for ${sequence}`);
+                    return;
+                }
+
+                product.unshift(['Sequence', 'Frequency']); // adding header
+                var data = new google.visualization.arrayToDataTable(product);
+                var chart = new google.visualization.Histogram(document.getElementById('histogram'));
+                chart.draw(data);
+            }
+        </script>
+    </body>
+</html>
+
