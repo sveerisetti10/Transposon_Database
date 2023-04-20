@@ -1,44 +1,80 @@
 #!/usr/bin/env python3
 
-import json
 import pymysql
 import cgi
+import cgitb
+#We need json to create the final json object 
+import json
 
-# Connect to database
-connection = pymysql.connect(
-    host="bioed.bu.edu",
-    user="sv",
-    password="sv",
-    db="Team_H",
-    port=4253,
-    autocommit=True,
-)
+#the next line is useful for debugging
+#it causes errors during execution to be sent back to the browser
+cgitb.enable()
 
-# Define SQL query
-# Here we allow the user to enter in a value for what table information they would like to display
+# We will have 2 queries: one for the target scores histogram and another for the gene sequence search to produce the table
 query1 = """
-SELECT repeat_type as Transposon_Order, count(*) as Total
-FROM `{}` 
-GROUP BY repeat_type
-ORDER BY Total DESC
+SELECT t.score 
+FROM targets t JOIN gene g using(gid)
+WHERE g.name = %s
 """
 
-# Process form data
-form = cgi.FieldStorage()
-#Checking to see that both the selector and the table of choice are indeed valid inputs
-if "selector" in form and "table_choice" in form:
-    selector = form.getvalue("selector", "")
-    table_choice = form.getvalue("table_choice")
+query2 = """
+SELECT name, chr, start, stop 
+FROM gene g 
+WHERE seq REGEXP %s
+ORDER BY chr, start ASC
+"""
 
-    # If the selector is "piechart", then we need to execute the query about and return a JSON file 
-    if selector == "piechart":
-        try:
-            with connection.cursor(pymysql.cursors.DictCursor) as cursor:
-                cursor.execute(query1.format(table_choice))
-                results = cursor.fetchall()
-                print("Content-type: application/json\n")
-                #Create our JSON file that contains the data needed to produce the pie chart
-                print(json.dumps(results))
-        except (pymysql.Error, TypeError) as e:
-            print("Content-type: text/plain\n")
-            print(f"An error occurred: {e}")
+#retrieve input data from the web server
+form = cgi.FieldStorage() 
+
+#next line is always required as first part of http output
+print("Content-type: text/html\n")
+
+# First we need to connect to the database
+connection = pymysql.connect(
+            host = "bioed.bu.edu",
+            user = 'sv',
+            password = 'sv', 
+            db = 'miRNA', 
+            port = 4253, 
+            autocommit=True 
+            )
+
+
+if (form):       
+     # get cursor
+    cursor = connection.cursor()
+    # We create a selector variable that will decide if we are to use the histogram producing query 
+    # or the gene sequence search query
+    selector = form.getvalue("selector","")
+
+    if (selector == "histogram"):
+        gene = form.getvalue("gene","")
+        if(gene!=""):
+            #execute query
+            try: 
+                #Execute query1 using gene user input 
+                cursor.execute(query1,[gene])
+            except pymysql.Error as e: 
+                print(e)
+        
+            results = cursor.fetchall() 
+            #format the output as json object
+            print(json.dumps(results))
+
+    if (selector == "regexp_table"):
+        dna_sequence = form.getvalue("dna_sequence","")
+        if(dna_sequence!=""):
+            #execute query
+            try: 
+                #Execute query2 using dna_sequence user input 
+                cursor.execute(query2,[dna_sequence])
+            except pymysql.Error as e: 
+                print(e)
+        
+            results = cursor.fetchall() 
+            #format the output as json object
+            print(json.dumps(results))
+
+
+        
