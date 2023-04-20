@@ -1,52 +1,196 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Google Pie Chart Example</title>
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-    <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script type="text/javascript">
-        function google_piechart() {
-            let tableChoice = $("#table_choice").val();
-            //We reference the Python Script that will give us the sorted transposon orders
-            $.get("https://bioed.bu.edu/cgi-bin/students_23/sv/search_order.py",
-                {selector: "piechart", table_choice: tableChoice},
-                //Use the create_piechart function, which uses Google charts in order to produce our pie chart
-                function (data) {
-                    create_piechart(data);
-                },
-                "json"
-            );
-        }
 
-        function create_piechart(data) {
-            if (data.length === 0) {
-                alert('There was no data for the table choice.');
-                return;
+%%html 
+<html>
+    <head>
+        
+        <!--Load the google charts library-->
+        <script src="https://www.gstatic.com/charts/loader.js"></script>
+
+        <!-- load the jQuery library -->
+        <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    </head>
+    <h1>Welcome to the miRNA Database Mining Program!</h1> 
+    <h2>The program can take the name of a user's gene and produce a google chart histogram of the target
+        scores of miRNA sequences that target that specific gene. It can also take a user's DNA sequence of 7-9 characters and produce a table containing information of genes that have the sequences containing
+        the search sequence.</h2>
+    <body>
+        <h2>Target Scores Histogram</h2>
+        <h3>Please enter an gene of interest. Examples include AAK1 & ABL2</h3>
+            <!-- input for the name of the gene of interest -->
+            <input type= "text" id="gene" name = "gene">
+            <!-- button that says “target scores histogram” -->
+            <button id = "target_scores_histogram" style = "background-color:skyblue ;color: black;">target scores histogram</button><br><br>
+            <!-- div to hold the histogram returned by AJAX -->
+            <div id="histogram" style = "width:900px;height:400px;"></div>
+
+        <h2>Gene Sequence Search</h2>
+        <h3>Please enter a DNA sequence that contains 7 to 9 characters and only contain characters: ACGT </h3>
+            <!-- DNA Sequence of Interest -->
+            <input type="text" id="dna_sequence" name = "dna_sequence">
+            <!-- button that says "find genes" -->
+            <button id = "gene_search" style = "background-color: skyblue;color: black;">find genes</button><br><br>
+            <!-- div to hold the table returned by AJAX -->
+            <div id="regexp_table" style = "width:800px;height:400px;"></div>
+        
+        <!-- Beginning of javascript -->
+        <script>
+            //start after the document is loaded
+            $(document).ready(function(){
+                //Load in the Google Charts Package
+                google.charts.load('current', {'packages':['corechart'],})
+                //This button will be referencing the target_scores_histogram button
+                $("#target_scores_histogram").click(function(){
+                    let gene = $("#gene").val();
+                    //empty any previous histograms in the the histogram division
+                    $("#histogram").empty()
+                    if (gene == ""){
+                        alert("There is no text in the gene name text box");
+                    }
+                    
+                    //Produce the histogram with the google_histogram() function below. 
+                    google_histogram();
+                    
+                });
+
+                $("#gene_search").click(function(){
+                    //Referencing the dna_sequence button
+                    let dna_sequence = $("#dna_sequence").val();
+                    //empty the regexp division
+                    $("#regexp_table").empty()
+                    //create a variable that stores valid inputs
+                    var valid_input = /[^ACGT]/;
+                    if (dna_sequence == ""){
+                        alert("There is no dna sequence in the text box");
+                    }
+                    else if (dna_sequence.length < 7 || dna_sequence.length > 9){
+                        $("#regexp_table").html("The input sequence is either too long or too short");
+                    }
+                    else if (valid_input.test(dna_sequence) == true){
+                        $("#regexp_table").html("The input sequence contains improper characters that are not part of the valid input characters");
+                    }
+                    else{
+                        //Function that creates the table
+                        google_table();
+                    }
+
+                    
+                });
+
+
+            });
+            
+            //This function will allow us to get the target score values for the gene of interest
+            function google_histogram(){ 
+                //gene name to insert in table column header 
+                let gene = $("#gene").val()
+                //We send an AJAX request to the python program below. 
+                $.get("https://bioed.bu.edu/cgi-bin/students_23/sv/sri_AJAX.py", 
+                //Here we make sure that the function is tied to the histogram selector in the python script
+                          {selector:"histogram", gene:gene},                                        
+                          function(product){                                               
+                            create_histogram(product);
+                          },
+                          "json"                                                        
+                    );
+        
             }
 
-            let formattedData = data.map(item => [item.Transposon_Order, item.Total]);
-            //Add header
-            formattedData.unshift(["Transposon_Order", "Total"]);
-            //Load all google charts information necessary
-            google.charts.load('current', {'packages': ['corechart']});
-            google.charts.setOnLoadCallback(function () {
-                //Load the processed data from the create_piechart() function
-                var chartData = new google.visualization.arrayToDataTable(formattedData);
+            //This function will produce our histogram via the gene the user inputs into the input box gene
+            function create_histogram(product){ 
+                //gene name to insert in table column header 
+                let gene = $("#gene").val()
+                if(product.length === 0) {
+                    $("#histogram").html('There was no data for the gene name ' + gene);
+                    return;
+                }
+               
+                product.unshift(["gene"]) // adding header
+                var data = new google.visualization.arrayToDataTable(product);
                 var options = {
-                    title: 'Transposon Orders'
+                    title: 'Histogram of miRNA targeting scores for ' + gene,
+                    colors: ['orange'], 
+                    hAxis: {title:'Targeting Score'},
+                    vAxis: {title:'Count'},
+                    legend: 'none'
                 };
-                var chart = new google.visualization.PieChart(document.getElementById('piechart'));
-                chart.draw(chartData, options);
-            });
-        }
-    </script>
-</head>
-<body>
-<form onsubmit="event.preventDefault(); google_piechart();">
-    table_choice: <input type='text' id='table_choice' name='table_choice'><br>
-    <button type="submit">Submit</button>
-</form>
-<div id="piechart" style="width: 900px; height: 500px;"></div>
-</body>
-</html>
+                var chart = new google.visualization.Histogram(document.getElementById('histogram'));
+                chart.draw(data, options);
+        
+            }
 
+            //this function constructs the html table for the results
+            function google_table(){ 
+                //gene name to insert in table column header 
+                let dna_sequence = $("#dna_sequence").val()
+                $.get("https://bioed.bu.edu/cgi-bin/students_23/sv/sri_AJAX.py", 
+                //Here we make sure that the function is tied to the regexp_table selector in the python script
+                          {selector: "regexp_table", dna_sequence:dna_sequence},                                        
+                          function(product2){                                               
+                            create_table(product2);
+                          },
+                          "json"                                                        
+                    );
+        
+            }
+
+            function create_table(product2){ 
+                //gene name to insert in table column header 
+                let dna_sequence = $("#dna_sequence").val()
+                if(product2.length === 0) {
+                    alert('There were no genes matching your sequence ' + dna_sequence);
+                    return;
+                }
+                
+                //Here we can start building components of the table
+                let sequence_name = "";
+                let sequence_chr = "";
+                let sequence_start = "";
+                let sequence_stop = "";
+                let table_body_contents = "";
+                
+                //We clear out the contents of the regexp_table div
+                $("#regexp_table").empty();
+                
+                //If data is returned from the AJAX call, build a new table
+                if (product2!=""){
+                    
+                    //loop through rows of the data
+                    for (let row= 0; row<product2.length; row++) {
+                        
+                        //First element will give us the the name of the sequence
+                        sequence_name = product2[row][0];
+                        //Second element stores gene chromosome data
+                        sequence_chr = product2[row][1];
+                        //Third element stores start data
+                        sequence_start = product2[row][2];
+                        //Fourth element stores stop data
+                        sequence_stop = product2[row][3];
+                        //Table Row Construction
+                        table_body_contents += `<tr><td> ${sequence_name}</td><td>${sequence_chr}</td><td>${sequence_start}</td><td>${sequence_stop}</td></tr>`;
+                    }
+                    
+                    
+                    //Here we can build our table using the table_body_contents that was just built  
+                    let table_template = `<table style="width:100%"; border-collapse:collapse:">
+                        <thead>
+                            <tr>
+                                <th style = "border: 1px solid black; padding: 6 px;">Table of genes with sequences containing ${dna_sequence}</th>
+                            </tr>
+                            <tr>
+                                <th style = "border: 1px solid black; padding: 6 px;">gene</th>
+                                <th style = "border: 1px solid black; padding: 6 px;">chr</th>
+                                <th style = "border: 1px solid black; padding: 6 px;">start</th>
+                                <th style = "border: 1px solid black; padding: 6 px;">stop</th>
+                            </tr>
+                        </thead>
+                        <tbody>${table_body_contents}</tbody>
+                    </table>`;
+                    
+                    //Append the table to the regexp_table division
+                    $("#regexp_table").append(table_template);
+                }
+            }
+ 
+        </script>
+    </body>
+</html>
