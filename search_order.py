@@ -1,58 +1,42 @@
 #!/usr/bin/env python3
 
+import json
 import pymysql
 import cgi
-import cgitb
-import json
 
-cgitb.enable()
+# Connect to database
+connection = pymysql.connect(
+    host="bioed.bu.edu",
+    user="sv",
+    password="sv",
+    db="Team_H",
+    port=4253,
+    autocommit=True,
+)
 
+# Define SQL query
 query1 = """
 SELECT repeat_type as Transposon_Order, count(*) as Total
-FROM {}
+FROM `{}` 
 GROUP BY repeat_type
 ORDER BY Total DESC
 """
 
+# Process form data
 form = cgi.FieldStorage()
-
-print("Content-Type: application/json")
-print()
-
-connection = pymysql.connect(
-    host="bioed.bu.edu",
-    user='sv',
-    password='sv',
-    db='Team_H',
-    port=4253,
-    autocommit=True
-)
-
-if form:
-    cursor = connection.cursor()
+if "selector" in form and "table_choice" in form:
     selector = form.getvalue("selector", "")
+    table_choice = form.getvalue("table_choice")
 
-    if selector == "histogram":
-        sequence = form.getvalue("sequence", "")
-        if sequence != "":
-            formatted_query = query1.format(sequence)
-            try:
-                cursor.execute(formatted_query)
-            except pymysql.Error as e:
-                response = {"error": str(e)}
-                print(json.dumps(response))
-                exit()
+    # If selector is "piechart", execute query and return results as JSON
+    if selector == "piechart":
+        try:
+            with connection.cursor(pymysql.cursors.DictCursor) as cursor:
+                cursor.execute(query1.format(table_choice))
+                results = cursor.fetchall()
+                print("Content-type: application/json\n")
+                print(json.dumps(results))
+        except (pymysql.Error, TypeError) as e:
+            print("Content-type: text/plain\n")
+            print(f"An error occurred: {e}")
 
-            results = cursor.fetchall()
-            results_list = [[row[0], row[1]] for row in results]
-
-            print(json.dumps(results_list))
-        else:
-            response = {"error": "Empty sequence"}
-            print(json.dumps(response))
-    else:
-        response = {"error": "Invalid selector"}
-        print(json.dumps(response))
-else:
-    response = {"error": "No form data received"}
-    print(json.dumps(response))
