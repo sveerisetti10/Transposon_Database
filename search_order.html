@@ -10,68 +10,135 @@
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script type="text/javascript">
-        function google_piechart() {
-            let tableChoice = $("#table_choice").val();
-            //We reference the Python Script that will give us the sorted transposon orders
-            $.get("https://bioed.bu.edu/cgi-bin/students_23/sv/search_order.py",
-                {selector: "piechart", table_choice: tableChoice},
-                //Use the create_piechart function, which uses Google charts in order to produce our pie chart
-                function (data) {
-                    create_piechart(data);
-                },
-                "json"
-            );
+
+function google_piechart() {
+    let tableChoice = $("#table_choice").val();
+    //We reference the Python Script that will give us the sorted transposon orders
+    $.get("https://bioed.bu.edu/cgi-bin/students_23/sv/search_order.py",
+        {selector: "piechart", table_choice: tableChoice},
+        //Use the create_piechart function, which uses Google charts in order to produce our pie chart
+        function (data) {
+            create_piechart(data);
+        },
+        "json"
+    );
+}
+
+function google_piechart_2() {
+    let transposonChoice = $("#transposon_choice").val();
+    //We reference the Python Script that will give us the sorted transposon orders
+    $.get("https://bioed.bu.edu/cgi-bin/students_23/sv/search_order_2.py",
+        {selector: "piechart_specific", transposon_choice: transposonChoice},
+        //Use the create_piechart function, which uses Google charts in order to produce our pie chart
+        function (data2) {
+            create_piechart_2(data2);
+        },
+        "json"
+    );
+}
+
+
+//Code to create the first pie chart and table
+function create_piechart(data) {
+    if (data.length === 0) {
+        alert('There was no data for the table choice.');
+        return;
+    }
+
+    let formattedData = data.map(item => [item.Transposon_Order, item.Total]);
+    //Add header
+    formattedData.unshift(["Transposon_Order", "Count"]);
+    google.charts.load('current', {'packages': ['corechart', 'controls']});
+    var dashboard = new google.visualization.Dashboard(
+        document.getElementById('dashboard_div'));
+    var filter_slider = new google.visualization.ControlWrapper({
+        'controlType': 'NumberRangeFilter',
+        'containerId': 'total_filter_slider',
+        'options': {
+            'filterColumnLabel': 'Count'
         }
+    });
+    // Create a pie chart, passing some options
+    var pieChart = new google.visualization.ChartWrapper({
+        'chartType': 'PieChart',
+        'containerId': 'pie_chart',
+        'options': {
+            'width': 700,
+            'height': 700,
+            'pieSliceText': 'value',
+            'legend': 'right'
+        }
+    });
+    // Create a table chart
+    var tableChart = new google.visualization.ChartWrapper({
+        'chartType': 'Table',
+        'containerId': 'data_table',
+        'options': {
+            'width': '120%',
+            'height': '90%',
+            'showRowNumber': false,
+            'page': 'enable',
+            'pageSize': 10
+        }
+    });
+    dashboard.bind(filter_slider, pieChart);
+    dashboard.bind(filter_slider, tableChart);
 
-        function create_piechart(data) {
-            if (data.length === 0) {
-                alert('There was no data for the table choice.');
-                return;
-            }
+    var dataTable = google.visualization.arrayToDataTable(formattedData);
+    dashboard.draw(dataTable);
+}
 
-            let formattedData = data.map(item => [item.Transposon_Order, item.Total]);
-            //Add header
-            formattedData.unshift(["Transposon_Order", "Count"]);
-            //Load all google charts information necessary
-            google.charts.load('current', {'packages': ['corechart', 'controls']});
-            var dashboard = new google.visualization.Dashboard(
-              document.getElementById('dashboard_div'));
-            var filter_slider = new google.visualization.ControlWrapper({
-              'controlType': 'NumberRangeFilter',
-              'containerId': 'total_filter_slider',
-              'options': {
-                'filterColumnLabel': 'Count'
-              }
-            });
-            // Create a pie chart, passing some options
-            var pieChart = new google.visualization.ChartWrapper({
-              'chartType': 'PieChart',
-              'containerId': 'pie_chart',
-              'options': {
-                'width': 700,
-                'height': 700,
-                'pieSliceText': 'value',
-                'legend': 'right'
-              }
-            });
-            // Create a table chart
-            var tableChart = new google.visualization.ChartWrapper({
-              'chartType': 'Table',
-              'containerId': 'data_table',
-              'options': {
-                'width': '120%',
-                'height': '90%',
-                'showRowNumber': false,
-                'page': 'enable',
-                'pageSize': 10
-              }
-            });
-            dashboard.bind(filter_slider, pieChart);
-            dashboard.bind(filter_slider, tableChart);
+//Code to create the second pie chart & table
+function create_piechart_2(data2) {
+    if (data2.length === 0) {
+        alert('There was no data for the table choice.');
+        return;
+    }
 
-            var dataTable = google.visualization.arrayToDataTable(formattedData);
-            dashboard.draw(dataTable);
-          }
+    let formattedData = data2.map(item => [String(item.Species), item.Count]);
+    //Add header
+    formattedData.unshift(["Species", "Count"]);
+    google.charts.load('current', {'packages': ['corechart', 'controls']});
+    var dashboard_2 = new google.visualization.Dashboard(
+        document.getElementById('dashboard_div_2'));
+    var filter_slider_2 = new google.visualization.ControlWrapper({
+        'controlType': 'NumberRangeFilter',
+        'containerId': 'total_filter_slider_2',
+        'options': {
+            'filterColumnLabel': 'Count'
+        }
+    });
+    // Create a pie chart, passing some options
+    var pieChart_2 = new google.visualization.ChartWrapper({
+        'chartType': 'PieChart',
+        'containerId': 'pie_chart_2',
+        'options': {
+            'width': 700,
+            'height': 700,
+            'pieSliceText': 'value',
+            'legend': 'right'
+        }
+    });
+    // Create a table chart
+    var tableChart_2 = new google.visualization.ChartWrapper({
+        'chartType': 'Table',
+        'containerId': 'data_table_2',
+        'options': {
+            'width': '120%',
+            'height': '90%',
+            'showRowNumber': false,
+            'page': 'enable',
+            'pageSize': 10
+        }
+    });
+    dashboard_2.bind(filter_slider_2, pieChart_2);
+    dashboard_2.bind(filter_slider_2, tableChart_2);
+
+    var dataTable = google.visualization.arrayToDataTable(formattedData);
+    dashboard_2.draw(dataTable);
+}
+
+
     </script>
 </head>
 <body>
@@ -101,10 +168,12 @@
 
 <!-- Page content -->
 <div class="w3-content w3-padding" style="max-width:1564px"><br>
-<form onsubmit="event.preventDefault(); google_piechart();">
+  <form onsubmit="event.preventDefault(); google_piechart(); google_piechart_2();">
     Please Enter Table (Species) of Choice: <input type='text' id='table_choice' name='table_choice'><br><br>
-    <button type= "submit">Submit</button><br>
-</form>
+    Please Enter Transposon Order of Choice: <input type='text' id='transposon_choice' name='transposon_choice'><br><br>
+    <button type="submit" >Submit</button><br>
+  </form>
+  
 <div id="dashboard_div">
   <!--Divs that will hold each control and chart-->
   <br>
@@ -115,9 +184,18 @@
     <div id = "data_table" style= "width: 800px;"></div>
   </div>
 </div>
-
-<!-- End page content -->
+<div id="dashboard_div_2">
+  <!--Divs that will hold each control and chart-->
+  <br>
+  <label for = "total_filter_slider_2">Your specific Transposon Order </label>
+  <div id="total_filter_slider_2"></div>
+  <div style= "display: flex;">
+    <div id = "pie_chart_2"></div>
+    <div id = "data_table_2" style= "width: 800px;"></div>
+  </div>
 </div>
+
+
 
 <!-- Footer -->
 <br>
