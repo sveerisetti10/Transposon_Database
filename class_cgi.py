@@ -23,6 +23,7 @@ class_query = """
 SELECT rt.repeat_order, count(*) as Total
 FROM `Sequence` s JOIN Repeat_Type rt ON s.TID = rt.TID
 WHERE rt.repeat_class = %s
+ORDER BY Total DESC
 """
 
 if (form):

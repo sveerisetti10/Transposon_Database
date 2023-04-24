@@ -24,6 +24,7 @@ SELECT rt.repeat_superfamily, count(rt.repeat_superfamily) as Total
 FROM `Sequence` s JOIN Repeat_Type rt ON s.TID = rt.TID 
 WHERE rt.repeat_class = %s
 GROUP BY rt.repeat_superfamily
+ORDER BY Total DESC
 """
 
 if (form):
