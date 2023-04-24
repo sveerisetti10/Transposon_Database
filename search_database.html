@@ -1,14 +1,16 @@
 <!DOCTYPE html>
 <html>
-<head>
-<title>BF 768 Database Project</title>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="/Users/pooja.psavla/Desktop/DBProject/mycss.css">
-</head>
-<body>
-
-<!-- Navbar (sit on top) -->
+    <head>Search by Species<br>
+      <meta charset="UTF-8" />
+      <title>Search by Species</title>
+    </head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="/Users/pooja.psavla/Desktop/Team_H/mycss.css">
+   	    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script> 
+    <body>
+    			<!-- Navbar (sit on top) -->
 <div class="w3-top">
   <div class="w3-bar w3-white w3-wide w3-padding w3-card">
     <a href="TDatabase.html" class="w3-bar-item w3-button w3-animate-zoom"><b>Transposon</b>Browser Home</a>
@@ -24,7 +26,7 @@
 
 <!-- Header -->
 <header class="w3-display-container w3-content w3-wide" style="min-height:100%;" id="home">
-  <img class="w3-image" src="/Users/pooja.psavla/Desktop/DBProject/search.png" alt="Image description">
+  <img class="w3-image" src="https://bioed.bu.edu/images/students_23/Team_H/bg/search.png" alt="Image description">
   <div class="w3-display-middle w3-margin-top w3-center">
     <h1 class="w3-xxlarge w3-text-white"><span class="w3-padding w3-black w3-opacity-min"><b>Search Database</b></span> <span class="w3-hide-small w3-text-light-grey"></span></h1>
   </div>
@@ -37,15 +39,151 @@
 <!-- End page content -->
 </div>
 
+          <select id="species" name="species"> Select the species name
+              <option value="">--Species name--</option>
+              <option value="Homo sapiens">Homo sapiens</option>
+              <option value="Heterocephalus glaber">Heterocephalus glaber</option>
+              <option value="Takifugu rubripes">Takifugu rubripes</option>
+              <option value="Betta splendens">Betta splendens</option>
+          </select>
+          <button id="submit">Select</button>
+        <div class="grid">
+            <div class="grid-item" id="1"></div>
+            <div class="grid-item" id="2"></div>
+            <div class="grid-item" id="3"></div>
+            <div class="grid-item" id="4"></div>
+          </div>
 
+        <div id="new"></div>
+        
+        <!-- Footer -->
+		<footer class="w3-center w3-black w3-padding-16">
+			<p>This project was developed at Boston University as
+      			part of BF768 Biological Database Systems Course, Spring 2023,  Instructor: Dr. Gary Benson</p>
+    			<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Boston_University_wordmark.svg/1000px-Boston_University_wordmark.svg.png?20200623211014" alt="H" width="120" height="50">
+    		<p>Last revised April 21, 2023</p>
+		</footer>
+    </body>
 
-<!-- Footer -->
-<footer class="w3-center w3-black w3-padding-16">
-<p>This project was developed at Boston University as
-      part of BF768 Biological Database Systems Course, Spring 2023,  Instructor: Dr. Gary Benson</p>
-    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Boston_University_wordmark.svg/1000px-Boston_University_wordmark.svg.png?20200623211014" alt="H" width="120" height="50">
-    <p>Last revised April 21, 2023</p>
-</footer>
+    <script>
+        $(document).ready(function(){
+          $('.grid-item').hide()
+            $("#submit").click(function(){
+                retrieve_results();
+                // showdiv();
+            })
+        })
 
-</body>
+        function showdiv(){
+          var div = document.getElementById("myDiv");
+          div.style.display = "block";
+        }
+
+        function retrieve_results(){
+            var species = document.getElementById("species").value;
+            if (species === ""){
+              return;
+            } else {
+              $.get("https://bioed.bu.edu/cgi-bin/students_23/Team_H/species.py", {species: species}, function(data) {
+                  google_piechart(data);
+              }, "json")
+              .fail(function() {
+                  console.log("error");
+              });
+            }
+        }
+
+        function google_piechart(data){
+            console.log("data", data);
+            // var data = JSON.parse(data);
+            google.charts.load('current', { 'packages': ['corechart'] });
+            google.charts.setOnLoadCallback(drawChart);
+            function drawChart(){
+              $('.grid-item').show()
+                //Class
+                var dataTable1 = new google.visualization.DataTable();
+                dataTable1.addColumn('string', 'Class');
+                dataTable1.addColumn('number', 'Count');
+                dataTable1.addRows(data['class']);
+
+                var options = {
+                  title: 'Class Classification',
+                  height: 500,
+                  width: '90%',
+                  backgroundColor: '#f0f0f0',
+                  titleTextStyle: {
+                    bold: true,
+                    textAlign: 'center'
+                  }
+                };
+
+                var chart = new google.visualization.PieChart(document.getElementById('1'));
+                chart.draw(dataTable1, options);
+                
+                //Order
+                var dataTable2 = new google.visualization.DataTable();
+                dataTable2.addColumn('string', 'Order');
+                dataTable2.addColumn('number', 'Count');
+                dataTable2.addRows(data['order']);
+                
+                var options = {
+                  title: 'Order Classification',
+                  height: 500,
+                  width: '90%',
+                  backgroundColor: '#f0f0f0',
+                  titleTextStyle: {
+                      bold: true,
+                      textAlign: 'center'
+                    }
+                };
+
+                var chart = new google.visualization.PieChart(document.getElementById('2'));
+                chart.draw(dataTable2, options);
+
+                //Superfamily
+                var dataTable3 = new google.visualization.DataTable();
+                dataTable3.addColumn('string', 'Superfamily');
+                dataTable3.addColumn('number', 'Count');
+                dataTable3.addRows(data['superfamily']);
+                
+                var options = {
+                  title: 'Superfamily Classification',
+                  height: 500,
+                  width: '100%',
+                  backgroundColor: '#f0f0f0',
+                  titleTextStyle: {
+                      bold: true,
+                      textAlign: 'center'
+                  }
+                };
+                var chart = new google.visualization.PieChart(document.getElementById('3'));
+                chart.draw(dataTable3, options);
+
+                // Length
+                var dataTable4 = new google.visualization.DataTable();
+                // dataTable4.addColumn('number', 'SequenceID');
+                dataTable4.addColumn('number', 'Length');
+                dataTable4.addRows(data['length']);
+                
+                var options = {
+                  title: 'Length of Sequences',
+                  height: 500,
+                  width: '100%',
+                  backgroundColor: '#f0f0f0',
+                  titleTextStyle: {
+                    bold: true,
+                    textAlign: 'center'
+                  },
+                  hAxis: {title: 'Sequence Length'},
+                  vAxis: {title: 'Count'},
+                  legend: 'none'
+              };
+                var chart = new google.visualization.Histogram(document.getElementById('4'));
+                chart.draw(dataTable4, options);
+            }
+           
+        }
+            
+    </script>
 </html>
+
