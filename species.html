@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+    <head>Search by Species<br>
+      <meta charset="UTF-8" />
+      <title>Search by Species</title>
+    </head>
+    <style>
+    .grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-rows: repeat(2, 1fr);
+        gap: 20px;
+      }
+
+      .grid-item {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #f0f0f0;
+        border: 1px solid #ccc;
+        padding: 20px;
+        display: none;
+      }
+
+      .grid-item img {
+        max-width: 100%;
+        max-height: 100%;
+      }
+
+      .grid-item:nth-child(1),
+      .grid-item:nth-child(2) {
+        grid-row: 1;
+      }
+
+      .grid-item:nth-child(1),
+      .grid-item:nth-child(3) {
+        grid-column: 1;
+      }
+
+      .grid-item:nth-child(2),
+      .grid-item:nth-child(4) {
+        grid-column: 2;
+      }
+
+      .grid-item:nth-child(3),
+      .grid-item:nth-child(4) {
+        grid-row: 2;}
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script> 
+    <body>
+          <select id="species" name="species"> Select the species name
+              <option value="">--Species name--</option>
+              <option value="Homo sapiens">Homo sapiens</option>
+              <option value="Heterocephalus glaber">Heterocephalus glaber</option>
+              <option value="Takifugu rubripes">Takifugu rubripes</option>
+              <option value="Betta splendens">Betta splendens</option>
+          </select>
+          <button id="submit">Select</button>
+        <div class="grid">
+            <div class="grid-item" id="1"></div>
+            <div class="grid-item" id="2"></div>
+            <div class="grid-item" id="3"></div>
+            <div class="grid-item" id="4"></div>
+          </div>
+
+        <div id="new"></div>
+    </body>
+
+    <script>
+        $(document).ready(function(){
+          $('.grid-item').hide()
+            $("#submit").click(function(){
+                retrieve_results();
+                // showdiv();
+            })
+        })
+
+        function showdiv(){
+          var div = document.getElementById("myDiv");
+          div.style.display = "block";
+        }
+
+        function retrieve_results(){
+            var species = document.getElementById("species").value;
+            if (species === ""){
+              return;
+            } else {
+              $.get("https://bioed.bu.edu/cgi-bin/students_23/saravind/species.py", {species: species}, function(data) {
+                  google_piechart(data);
+              }, "json")
+              .fail(function() {
+                  console.log("error");
+              });
+            }
+        }
+
+        function google_piechart(data){
+            console.log("data", data);
+            // var data = JSON.parse(data);
+            google.charts.load('current', { 'packages': ['corechart'] });
+            google.charts.setOnLoadCallback(drawChart);
+            function drawChart(){
+              $('.grid-item').show()
+                //Class
+                var dataTable1 = new google.visualization.DataTable();
+                dataTable1.addColumn('string', 'Class');
+                dataTable1.addColumn('number', 'Count');
+                dataTable1.addRows(data['class']);
+
+                var options = {
+                  title: 'Class Classification',
+                  height: 500,
+                  width: '90%',
+                  backgroundColor: '#f0f0f0',
+                  titleTextStyle: {
+                    bold: true,
+                    textAlign: 'center'
+                  }
+                };
+
+                var chart = new google.visualization.PieChart(document.getElementById('1'));
+                chart.draw(dataTable1, options);
+                
+                //Order
+                var dataTable2 = new google.visualization.DataTable();
+                dataTable2.addColumn('string', 'Order');
+                dataTable2.addColumn('number', 'Count');
+                dataTable2.addRows(data['order']);
+                
+                var options = {
+                  title: 'Order Classification',
+                  height: 500,
+                  width: '90%',
+                  backgroundColor: '#f0f0f0',
+                  titleTextStyle: {
+                      bold: true,
+                      textAlign: 'center'
+                    }
+                };
+
+                var chart = new google.visualization.PieChart(document.getElementById('2'));
+                chart.draw(dataTable2, options);
+
+                //Superfamily
+                var dataTable3 = new google.visualization.DataTable();
+                dataTable3.addColumn('string', 'Superfamily');
+                dataTable3.addColumn('number', 'Count');
+                dataTable3.addRows(data['superfamily']);
+                
+                var options = {
+                  title: 'Superfamily Classification',
+                  height: 500,
+                  width: '100%',
+                  backgroundColor: '#f0f0f0',
+                  titleTextStyle: {
+                      bold: true,
+                      textAlign: 'center'
+                  }
+                };
+                var chart = new google.visualization.PieChart(document.getElementById('3'));
+                chart.draw(dataTable3, options);
+
+                // Length
+                var dataTable4 = new google.visualization.DataTable();
+                // dataTable4.addColumn('number', 'SequenceID');
+                dataTable4.addColumn('number', 'Length');
+                dataTable4.addRows(data['length']);
+                
+                var options = {
+                  title: 'Length of Sequences',
+                  height: 500,
+                  width: '100%',
+                  backgroundColor: '#f0f0f0',
+                  titleTextStyle: {
+                    bold: true,
+                    textAlign: 'center'
+                  },
+                  hAxis: {title: 'Sequence Length'},
+                  vAxis: {title: 'Count'},
+                  legend: 'none'
+              };
+                var chart = new google.visualization.Histogram(document.getElementById('4'));
+                chart.draw(dataTable4, options);
+            }
+           
+        }
+            
+    </script>
+</html>
+
+
