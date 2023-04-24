@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<!--style for class search-->
+	<style>
+		div {margin-bottom: 25px;}
+		
+		h1 {margin-top: 50px; font-weight: bold;}
+		
+		.dropdown{
+			position: static;
+			display: inline-block;
+		}
+		
+		.dropdown-options {
+			position: static;
+			left: 100px;
+			top: 100%;
+			min-width: 100px;
+			z-index: 1;
+			margin-top: 10px;
+			background-color: white;
+			
+		}
+
+
+
+	</style>
+	
+	<title>Search By Class</title>
+	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+	<script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script type="text/javascript">
+		
+		// FOR CLASS
+		
+		function google_piechart() {
+			
+			var class_choice = $('#class_choice').val();
+			console.log('Selected class:', class_choice);
+
+			// get data from output of Python script
+			$.get("https://bioed.bu.edu/cgi-bin/students_23/Team_H/class_cgi.py",
+				{selector: 'piechart',  class_choice:class_choice},
+				// need to use the Google charts pie chart function here to generate from data...
+				function (res){
+					console.log('Received data:', res);
+					create_piechart(res);
+				},
+				"json"
+			);
+		}
+		
+		// define that function here, now
+		function create_piechart(res, class_choice) {
+			console.log('Processed data:', res, class_choice);
+			
+			// use strict equality operator here...don't want weird results from just `==`
+
+			if (res.length === 0)
+				 $('#piechart').html('There was no data for the class choice: ' + class_choice);
+				 
+			
+			let formatted_results = res.map(item => item.slice(0, 2));
+			console.log(formatted_results);
+			// adding a header
+			formatted_results.unshift(["repeat_class", "Count"]);
+			// loading Google charts info
+			google.charts.load('current', {'packages': ['corechart']});
+			google.charts.setOnLoadCallback(function () {
+				// format processed data for use w/ Google charts
+				var chart_data = google.visualization.arrayToDataTable(formatted_results);
+				console.log('Chart data:', chart_data);
+				// options for the piechart
+				var options = {
+				
+					title: 'Transposon Orders by Class',
+					is3D: true,
+					colors: ['#0072B2', '#E69F00', '#009E73', '#F0E442', '#CC79A7', '#D55E00', '#56B4E9', '#0072B2', '#F0E442', '#009E73', '#D55E00', '#CC79A7']
+				};
+				
+				// finally creating the pie chart
+				var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+				chart.draw(chart_data, options);
+				
+			});
+		}
+
+		// FOR SUPERFAMILY /////////////////
+		////////////////////////////////////
+		
+		
+		
+		function google_piechart2() {
+			
+			var class_choice = $('#class_choice').val();
+			console.log('Selected class:', class_choice);
+
+			// get data from output of Python script
+			$.get("https://bioed.bu.edu/cgi-bin/students_23/Team_H/super_fam_cgi.py",
+				{selector: 'piechart',  class_choice:class_choice},
+				// need to use the Google charts pie chart function here to generate from data...
+				function (res2){
+					console.log('Received data:', res2);
+					create_piechart2(res2);
+				},
+				"json"
+			);
+		}
+		
+		// define that function here, now
+		function create_piechart2(res2, class_choice) {
+			console.log('Processed data:', res2, class_choice);
+			
+			// use strict equality operator here...don't want weird results from just `==`
+			if (res2.length === 0)
+				 $('#piechart2').html('There was no data for the class choice: ' + class_choice);
+				 
+			
+			let formatted_results2 = res2.map(item => item.slice(0, 2));
+			console.log(formatted_results2);
+			// adding a header
+			formatted_results2.unshift(["repeat_class", "Count"]);
+			// loading Google charts info
+			google.charts.load('current', {'packages': ['corechart']});
+			google.charts.setOnLoadCallback(function () {
+				// format processed data for use w/ Google charts
+				var chart_data2 = google.visualization.arrayToDataTable(formatted_results2);
+				console.log('Chart data:', chart_data2);
+				// options for the piechart
+				var options2 = {
+				
+					title: 'Transposon Superfamilies by Class',
+					is3D: true,
+					colors: ['#1B9E77', '#D95F02', '#7570B3', '#E7298A', '#66A61E', '#E6AB02', '#A6761D', '#666666', '#FDAE61', '#FDBF6F', '#FDD0A2', '#F46D43']
+				};
+				
+				// finally creating the pie chart
+				var chart2 = new google.visualization.PieChart(document.getElementById('piechart2'));
+				chart2.draw(chart_data2, options2);
+				
+			});
+		}
+
+
+	</script>
+</head>
+
+<body>
+	<form onsubmit='event.preventDefault(); google_piechart(); google_piechart2();'>
+	<h3>Please select which transposon class you would like from the dropdown menu.</h3>
+		<label for='class_choice'>Select transposon class:</label>
+		<select id='class_choice' name='class_choice'>
+			<option value=''>Select class</option>
+			<option value='DNA'>DNA</option>
+			<option value='RNA'>RNA</option>
+			<option value='Unknown'>Unknown</option>
+		</select><br>
+		<button type='submit'>Submit</button>
+		
+<!-- 
+	</form>
+	<form onsubmit='event.preventDefault(); google_piechart2();'>
+		<label for='class_choice'>Select transposon class:</label>
+		<select id='class_choice' name='class_choice'>
+			<option value=''>Select class</option>
+			<option value='DNA'>DNA</option>
+			<option value='RNA'>RNA</option>
+			<option value='Unknown'>Unknown</option>
+		</select><br>
+		<button type='submit'>Submit</button>
+ -->
+		
+	
+	<div id='piechart' style='width: 900px; height: 500px;'></div>
+	<div id='piechart2' style='width: 900px; height: 500px;'></div>
+</body>
+</html>
+
