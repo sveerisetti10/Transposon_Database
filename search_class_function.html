@@ -64,7 +64,7 @@
 			let formatted_results = res.map(item => item.slice(0, 2));
 			console.log(formatted_results);
 			// adding a header
-			formatted_results.unshift(["repeat_class", "Count"]);
+			formatted_results.unshift(["Transposon Order", "Count"]);
 			
 			// get the total count of results
 			let total_count = res.reduce((sum, item) => sum + item[1], 0);
@@ -138,7 +138,7 @@
 			let formatted_results2 = res2.map(item => item.slice(0, 2));
 			console.log(formatted_results2);
 			// adding a header
-			formatted_results2.unshift(["repeat_class", "Count"]);
+			formatted_results2.unshift(["Transposon Superfamily", "Count"]);
 			
 			
 			
@@ -179,7 +179,7 @@
 
 <body>
 	<form onsubmit='event.preventDefault(); google_piechart(); google_piechart2();'>
-	<h3>Please select which transposon class you would like from the dropdown menu.</h3>
+	<h3>Please select which transposon class you would like to search by from the dropdown menu below.</h3>
 		<label for='class_choice'>Select transposon class:</label>
 		<select id='class_choice' name='class_choice'>
 			<option value=''>Select class</option>
