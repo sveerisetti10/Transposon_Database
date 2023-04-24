@@ -66,7 +66,7 @@
 			// adding a header
 			formatted_results.unshift(["repeat_class", "Count"]);
 			// loading Google charts info
-			google.charts.load('current', {'packages': ['corechart']});
+			google.charts.load('current', {'packages': ['corechart', 'table']});
 			google.charts.setOnLoadCallback(function () {
 				// format processed data for use w/ Google charts
 				var chart_data = google.visualization.arrayToDataTable(formatted_results);
@@ -82,6 +82,15 @@
 				// finally creating the pie chart
 				var chart = new google.visualization.PieChart(document.getElementById('piechart'));
 				chart.draw(chart_data, options);
+				
+				// create a table with the same data
+				var table = new google.visualization.Table(document.getElementById('table1'));
+				// execute here
+				table.draw(chart_data, {
+					title: 'Transposon Orders by Class',
+					showRowNumber: false, 
+					width: '100%'
+				});
 				
 			});
 		}
@@ -139,6 +148,15 @@
 				var chart2 = new google.visualization.PieChart(document.getElementById('piechart2'));
 				chart2.draw(chart_data2, options2);
 				
+				// create a table with the same data
+				var table2 = new google.visualization.Table(document.getElementById('table2'));
+				// execute here
+				table2.draw(chart_data2, {
+					title: 'Transposon Superfamilies by Class',
+					showRowNumber: false, 
+					width: '100%'
+				});
+				
 			});
 		}
 
@@ -158,22 +176,12 @@
 		</select><br>
 		<button type='submit'>Submit</button>
 		
-<!-- 
-	</form>
-	<form onsubmit='event.preventDefault(); google_piechart2();'>
-		<label for='class_choice'>Select transposon class:</label>
-		<select id='class_choice' name='class_choice'>
-			<option value=''>Select class</option>
-			<option value='DNA'>DNA</option>
-			<option value='RNA'>RNA</option>
-			<option value='Unknown'>Unknown</option>
-		</select><br>
-		<button type='submit'>Submit</button>
- -->
-		
+
 	
 	<div id='piechart' style='width: 900px; height: 500px;'></div>
+	<div id='table1'></div>
 	<div id='piechart2' style='width: 900px; height: 500px;'></div>
+	<div id='table2'></div>
 </body>
 </html>
 
