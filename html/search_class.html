@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="stylesheet" href="/Users/pooja.psavla/Desktop/Team_H/mycss.css">
+
+	
+	<title>Search By Class</title>
+	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+	<script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script type="text/javascript">
+
+		
+		// FOR CLASS
+		
+		function google_piechart() {
+			
+			var class_choice = $('#class_choice').val();
+			console.log('Selected class:', class_choice);
+
+			// get data from output of Python script
+			$.get("https://bioed.bu.edu/cgi-bin/students_23/Team_H/class_cgi.py",
+				{selector: 'piechart',  class_choice:class_choice},
+				// need to use the Google charts pie chart function here to generate from data...
+				function (res){
+					console.log('Received data:', res);
+					create_piechart(res);
+				},
+				"json"
+			);
+		}
+		
+		// define that function here, now
+		function create_piechart(res, class_choice) {
+			console.log('Processed data:', res, class_choice);
+			
+			// use strict equality operator here...don't want weird results from just `==`
+
+			if (res.length === 0)
+				 $('#piechart').html('There was no data for the class choice: ' + class_choice);
+				 
+			
+			let formatted_results = res.map(item => item.slice(0, 2));
+			console.log(formatted_results);
+			// adding a header
+			formatted_results.unshift(["Transposon Order", "Count"]);
+			
+			// get the total count of results
+			let total_count = res.reduce((sum, item) => sum + item[1], 0);
+			console.log('Total count:', total_count)
+			
+			// return total count to the screen for the user
+			$('#result_count').html('Total number of results: ' + total_count);
+			
+			
+			// loading Google charts info
+			google.charts.load('current', {'packages': ['corechart', 'table']});
+			google.charts.setOnLoadCallback(function () {
+				// format processed data for use w/ Google charts
+				var chart_data = google.visualization.arrayToDataTable(formatted_results);
+				console.log('Chart data:', chart_data);
+				// options for the piechart
+				var options = {
+				
+					title: 'Transposon Orders by Class',
+					is3D: true,
+					colors: ['#0072B2', '#E69F00', '#009E73', '#F0E442', '#CC79A7', '#D55E00', '#56B4E9', '#0072B2', '#F0E442', '#009E73', '#D55E00', '#CC79A7']
+				};
+				
+				// finally creating the pie chart
+				var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+				chart.draw(chart_data, options);
+				
+				// create a table with the same data
+				var table = new google.visualization.Table(document.getElementById('table1'));
+				// execute here
+				table.draw(chart_data, {
+					title: 'Transposon Orders by Class',
+					showRowNumber: false, 
+					width: '50%'
+				});
+				
+			});
+		}
+
+		// FOR SUPERFAMILY /////////////////
+		////////////////////////////////////
+		
+		
+		
+		function google_piechart2() {
+			
+			var class_choice = $('#class_choice').val();
+			console.log('Selected class:', class_choice);
+
+			// get data from output of Python script
+			$.get("https://bioed.bu.edu/cgi-bin/students_23/Team_H/super_fam_cgi.py",
+				{selector: 'piechart',  class_choice:class_choice},
+				// need to use the Google charts pie chart function here to generate from data...
+				function (res2){
+					console.log('Received data:', res2);
+					create_piechart2(res2);
+				},
+				"json"
+			);
+		}
+		
+		// define that function here, now
+		function create_piechart2(res2, class_choice) {
+			console.log('Processed data:', res2, class_choice);
+			
+			// use strict equality operator here...don't want weird results from just `==`
+			if (res2.length === 0)
+				 $('#piechart2').html('There was no data for the class choice: ' + class_choice);
+				 
+			
+			let formatted_results2 = res2.map(item => item.slice(0, 2));
+			console.log(formatted_results2);
+			// adding a header
+			formatted_results2.unshift(["Transposon Superfamily", "Count"]);
+			
+			
+			
+			
+			// loading Google charts info
+			google.charts.load('current', {'packages': ['corechart']});
+			google.charts.setOnLoadCallback(function () {
+				// format processed data for use w/ Google charts
+				var chart_data2 = google.visualization.arrayToDataTable(formatted_results2);
+				console.log('Chart data:', chart_data2);
+				// options for the piechart
+				var options2 = {
+				
+					title: 'Transposon Superfamilies by Class',
+					is3D: true,
+					colors: ['#1B9E77', '#D95F02', '#7570B3', '#E7298A', '#66A61E', '#E6AB02', '#A6761D', '#666666', '#FDAE61', '#FDBF6F', '#FDD0A2', '#F46D43']
+				};
+				
+				// finally creating the pie chart
+				var chart2 = new google.visualization.PieChart(document.getElementById('piechart2'));
+				chart2.draw(chart_data2, options2);
+				
+				// create a table with the same data
+				var table2 = new google.visualization.Table(document.getElementById('table2'));
+				// execute here
+				table2.draw(chart_data2, {
+					title: 'Transposon Superfamilies by Class',
+					showRowNumber: false, 
+					width: '50%'
+				});
+				
+			});
+		}
+
+
+	</script>
+</head>
+
+<body>
+
+<!-- Navbar (sit on top) -->
+<div class="w3-top">
+  <div class="w3-bar w3-white w3-wide w3-padding w3-card">
+    <a href="TDatabase.html" class="w3-bar-item w3-button w3-animate-zoom"><b>Transposon</b>Browser Home</a>
+    <!-- Float links to the right. Hide them on small screens -->
+    <div class="w3-right w3-hide-small">
+      <a href="Team.html" class="w3-bar-item w3-button w3-animate-zoom">Meet the Team</a>
+      <a href="search_class.html" class="w3-bar-item w3-button w3-animate-zoom">Search Transposon Class</a>
+      <a href="search_order.html" class="w3-bar-item w3-button w3-animate-zoom">Search Transposon Order</a>
+      <a href="search_database.html" class="w3-bar-item w3-button w3-animate-zoom">Search Database</a>
+    </div>
+  </div>
+</div>
+
+<!-- Header -->
+<header class="w3-display-container w3-content w3-wide" style="min-height:100%;"  id="home">
+  <img class="w3-image" src="https://bioed.bu.edu/images/students_23/Team_H/bg/class.png" alt="Image description">
+  <div class="w3-display-middle w3-margin-top w3-center">
+    <h1 class="w3-xxlarge w3-text-white"><span class="w3-padding w3-black w3-opacity-min"><b>Search By Class</b></span> <span class="w3-hide-small w3-text-light-grey"></span></h1>
+  </div>
+</header>
+
+<!-- Page content -->
+<div class="w3-content w3-padding" style="max-width:1564px">
+	<form onsubmit='event.preventDefault(); google_piechart(); google_piechart2();'>
+	<h3>Please select which transposon class you would like to search by from the dropdown menu below.</h3>
+		<label for='class_choice'>Select transposon class:</label>
+		<select id='class_choice' name='class_choice'>
+			<option value=''>Select class</option>
+			<option value='DNA'>DNA</option>
+			<option value='RNA'>RNA</option>
+			<option value='Unknown'>Unknown</option>
+		</select><br>
+		<button type='submit'>Submit</button>
+		
+
+	<div id='result_count'></div>
+	<div id='piechart' style='width: 900px; height: 500px;'></div>
+	<div id='table1'></div>
+	<div id='piechart2' style='width: 900px; height: 500px;'></div>
+	<div id='table2'></div>
+
+<!-- End page content -->
+</div>
+
+<!-- Footer -->
+<footer class="w3-center w3-black w3-padding-16">
+<p>This project was developed at Boston University as
+      part of BF768 Biological Database Systems Course, Spring 2023,  Instructor: Dr. Gary Benson</p>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Boston_University_wordmark.svg/1000px-Boston_University_wordmark.svg.png?20200623211014" alt="H" width="120" height="50">
+    <p>Last revised April 21, 2023</p>
+</footer>
+
+</body>
+</html>
