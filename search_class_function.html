@@ -65,6 +65,15 @@
 			console.log(formatted_results);
 			// adding a header
 			formatted_results.unshift(["repeat_class", "Count"]);
+			
+			// get the total count of results
+			let total_count = res.reduce((sum, item) => sum + item[1], 0);
+			console.log('Total count:', total_count)
+			
+			// return total count to the screen for the user
+			$('#result_count').html('Total number of results: ' + total_count);
+			
+			
 			// loading Google charts info
 			google.charts.load('current', {'packages': ['corechart', 'table']});
 			google.charts.setOnLoadCallback(function () {
@@ -130,6 +139,10 @@
 			console.log(formatted_results2);
 			// adding a header
 			formatted_results2.unshift(["repeat_class", "Count"]);
+			
+			
+			
+			
 			// loading Google charts info
 			google.charts.load('current', {'packages': ['corechart']});
 			google.charts.setOnLoadCallback(function () {
@@ -177,7 +190,7 @@
 		<button type='submit'>Submit</button>
 		
 
-	
+	<div id='result_count'></div>
 	<div id='piechart' style='width: 900px; height: 500px;'></div>
 	<div id='table1'></div>
 	<div id='piechart2' style='width: 900px; height: 500px;'></div>
