@@ -13,6 +13,9 @@
 
 function google_piechart() {
     let tableChoice = $("#table_choice").val();
+    if (tableChoice == ""){
+      alert("There is no text in the species name text box");
+    }
     //We reference the Python Script that will give us the sorted transposon orders
     $.get("https://bioed.bu.edu/cgi-bin/students_23/sv/search_order.py",
         {selector: "piechart", table_choice: tableChoice},
@@ -26,6 +29,10 @@ function google_piechart() {
 
 function google_piechart_2() {
     let transposonChoice = $("#transposon_choice").val();
+    if (transposonChoice == ""){
+      alert("There is no text in the transposon choice text box");
+    }
+    $("#transposon_order_heading").text(`Order By Species For ${transposonChoice}`);
     //We reference the Python Script that will give us the sorted transposon orders
     $.get("https://bioed.bu.edu/cgi-bin/students_23/sv/search_order_2.py",
         {selector: "piechart_specific", transposon_choice: transposonChoice},
@@ -116,7 +123,7 @@ function create_piechart_2(data2) {
             'width': 700,
             'height': 700,
             'pieSliceText': 'value',
-            'legend': 'right'
+            'legend': 'right', 
         }
     });
     // Create a table chart
@@ -131,6 +138,11 @@ function create_piechart_2(data2) {
             'pageSize': 10
         }
     });
+
+    pieChart_2.setOption('sliceVisibilityThreshold', 0);
+    pieChart_2.setOption('legend', { position: 'right', alignment: 'center', textStyle: { fontSize: 14 } });
+    pieChart_2.setOption('sliceNames', ['Betafish', 'HumanT2T', 'Molerat', 'Pufferfish']);
+
     dashboard_2.bind(filter_slider_2, pieChart_2);
     dashboard_2.bind(filter_slider_2, tableChart_2);
 
@@ -169,11 +181,14 @@ function create_piechart_2(data2) {
 <!-- Page content -->
 <div class="w3-content w3-padding" style="max-width:1564px"><br>
   <form onsubmit="event.preventDefault(); google_piechart(); google_piechart_2();">
-    Please Enter Table (Species) of Choice: <input type='text' id='table_choice' name='table_choice'><br><br>
-    Please Enter Transposon Order of Choice: <input type='text' id='transposon_choice' name='transposon_choice'><br><br>
+    <h3>Instructions: Please enter the species name which you would like to focus on as well as any particular 
+      transposon order of your choice.</h3>
+    Species Name (Examples Include: Betafish, HumanT2T, Molerat, Pufferfish): <input type='text' id='table_choice' name='table_choice'><br><br>
+    Please enter your transposon of choice (Examples Include: LINE, SINE): <input type='text' id='transposon_choice' name='transposon_choice'><br><br>
     <button type="submit" >Submit</button><br>
   </form>
-  
+<br> 
+<h3>Transposon Orders By Species</h3> 
 <div id="dashboard_div">
   <!--Divs that will hold each control and chart-->
   <br>
@@ -184,6 +199,9 @@ function create_piechart_2(data2) {
     <div id = "data_table" style= "width: 800px;"></div>
   </div>
 </div>
+<br>
+<br>
+<h3 id="transposon_order_heading">Order By Species For ${transposon_choice}</h3> 
 <div id="dashboard_div_2">
   <!--Divs that will hold each control and chart-->
   <br>
