@@ -23,7 +23,7 @@ sf_query = """
 SELECT rt.repeat_superfamily, count(rt.repeat_superfamily) as Total
 FROM `Sequence` s JOIN Repeat_Type rt ON s.TID = rt.TID 
 WHERE rt.repeat_class = %s
-GROUP BY rt.repeat_order 
+GROUP BY rt.repeat_superfamily
 """
 
 if (form):
