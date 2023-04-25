@@ -4,22 +4,24 @@
 	<title>BF 768 Database Project</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" href="/Users/pooja.psavla/Desktop/Team_H/mycss.css">
-
-
+	<link rel="stylesheet" href="mycss.css">
 
 	<title>Google Pie Chart Example</title>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script type="text/javascript">
+    <script type="text/javascript">
 
 function google_piechart() {
     let tableChoice = $("#table_choice").val();
+    //Clear out any previous visualizations from the divisions
+    $("#pie_chart").empty()
+    $("#data_table").empty()
     if (tableChoice == ""){
       alert("There is no text in the species name text box");
     }
     //We reference the Python Script that will give us the sorted transposon orders
     $.get("https://bioed.bu.edu/cgi-bin/students_23/sv/search_order.py",
+    //Selector that matches Python server side script
         {selector: "piechart", table_choice: tableChoice},
         //Use the create_piechart function, which uses Google charts in order to produce our pie chart
         function (data) {
@@ -31,12 +33,16 @@ function google_piechart() {
 
 function google_piechart_2() {
     let transposonChoice = $("#transposon_choice").val();
+    $("#pie_chart_2").empty()
+    $("#data_table_2").empty()
     if (transposonChoice == ""){
       alert("There is no text in the transposon choice text box");
     }
-    $("#transposon_order_heading").text(`Order By Species For ${transposonChoice}`);
+    $("#transposon_order_heading").text(`Occurences of ` + transposonChoice + ` within the Betta splendens, Takifugu rubripes, Heterocephalus
+    glaber, and Homo sapiens species`);
     //We reference the Python Script that will give us the sorted transposon orders
     $.get("https://bioed.bu.edu/cgi-bin/students_23/sv/search_order_2.py",
+    //Selector that matches server side script
         {selector: "piechart_specific", transposon_choice: transposonChoice},
         //Use the create_piechart function, which uses Google charts in order to produce our pie chart
         function (data2) {
@@ -55,11 +61,12 @@ function create_piechart(data) {
     }
 
     let formattedData = data.map(item => [item.Transposon_Order, item.Total]);
-    //Add header
+    //Add the table headers with Transposon_Order and Count
     formattedData.unshift(["Transposon_Order", "Count"]);
-    google.charts.load('current', {'packages': ['corechart', 'controls']});
+    //Create variable for the dashboard
     var dashboard = new google.visualization.Dashboard(
         document.getElementById('dashboard_div'));
+    //Create variable for the slider for live filtering of count
     var filter_slider = new google.visualization.ControlWrapper({
         'controlType': 'NumberRangeFilter',
         'containerId': 'total_filter_slider',
@@ -67,18 +74,18 @@ function create_piechart(data) {
             'filterColumnLabel': 'Count'
         }
     });
-    // Create a pie chart, passing some options
+    // Create the pie chart with select options
     var pieChart = new google.visualization.ChartWrapper({
         'chartType': 'PieChart',
         'containerId': 'pie_chart',
         'options': {
-            'width': 700,
-            'height': 700,
+            'width': 800,
+            'height': 800,
             'pieSliceText': 'value',
             'legend': 'right'
         }
     });
-    // Create a table chart
+    // Create the table with select options
     var tableChart = new google.visualization.ChartWrapper({
         'chartType': 'Table',
         'containerId': 'data_table',
@@ -90,6 +97,8 @@ function create_piechart(data) {
             'pageSize': 10
         }
     });
+
+    //Binding everything together to produce the dashboard
     dashboard.bind(filter_slider, pieChart);
     dashboard.bind(filter_slider, tableChart);
 
@@ -105,9 +114,8 @@ function create_piechart_2(data2) {
     }
 
     let formattedData = data2.map(item => [String(item.Species), item.Count]);
-    //Add header
+    //Add the table header with Species & Count
     formattedData.unshift(["Species", "Count"]);
-    google.charts.load('current', {'packages': ['corechart', 'controls']});
     var dashboard_2 = new google.visualization.Dashboard(
         document.getElementById('dashboard_div_2'));
     var filter_slider_2 = new google.visualization.ControlWrapper({
@@ -117,18 +125,18 @@ function create_piechart_2(data2) {
             'filterColumnLabel': 'Count'
         }
     });
-    // Create a pie chart, passing some options
+    // Create the pie chart with specific options
     var pieChart_2 = new google.visualization.ChartWrapper({
         'chartType': 'PieChart',
         'containerId': 'pie_chart_2',
         'options': {
-            'width': 700,
-            'height': 700,
+            'width': 800,
+            'height': 800,
             'pieSliceText': 'value',
             'legend': 'right', 
         }
     });
-    // Create a table chart
+    // Create the table with specific options
     var tableChart_2 = new google.visualization.ChartWrapper({
         'chartType': 'Table',
         'containerId': 'data_table_2',
@@ -152,6 +160,10 @@ function create_piechart_2(data2) {
     dashboard_2.draw(dataTable);
 }
 
+//Load packages needed to produce the google charts visualizations
+document.addEventListener('DOMContentLoaded', function() {
+  google.charts.load('current', {'packages': ['corechart', 'controls']});
+});
 
     </script>
 </head>
@@ -166,14 +178,15 @@ function create_piechart_2(data2) {
       <a href="Team.html" class="w3-bar-item w3-button w3-animate-zoom">Meet the Team</a>
       <a href="search_class.html" class="w3-bar-item w3-button w3-animate-zoom">Search Transposon Class</a>
       <a href="search_order.html" class="w3-bar-item w3-button w3-animate-zoom">Search Transposon Order</a>
-      <a href="search_database.html" class="w3-bar-item w3-button w3-animate-zoom">Search Database</a>
+      <a href="search_database.html" class="w3-bar-item w3-button w3-animate-zoom">Search Database
+      </a>
     </div>
   </div>
 </div>
 
 <!-- Header -->
 <header class="w3-display-container w3-content w3-wide"  style="min-height:100%;" id="home">
-  <img class="w3-image" src="https://bioed.bu.edu/images/students_23/Team_H/bg/order.png" alt="Image description">
+  <img class="w3-image" src="order.png" alt="Image description">
   <div class="w3-display-middle w3-margin-top w3-center">
     <h1 class="w3-xxlarge w3-text-white"><span class="w3-padding w3-black w3-opacity-min"><b>Search By Order</b></span> <span class="w3-hide-small w3-text-light-grey"></span></h1>
   </div>
@@ -181,17 +194,15 @@ function create_piechart_2(data2) {
 
 <!-- Page content -->
 <div class="w3-content w3-padding" style="max-width:1564px"><br>
-  <form onsubmit="event.preventDefault(); google_piechart(); google_piechart_2();">
-    <h3>Instructions: Please enter the species name which you would like to focus on as well as any particular 
-      transposon order of your choice.</h3>
-    Species Name (Examples Include: Betafish, HumanT2T, Molerat, Pufferfish): <input type='text' id='table_choice' name='table_choice'><br><br>
-    Please enter your transposon of choice (Examples Include: LINE, SINE): <input type='text' id='transposon_choice' name='transposon_choice'><br><br>
+  <form onsubmit="event.preventDefault(); google_piechart()">
+    <h2>Transposon Orders By Species</h2>
+    <h4>Instructions: Please enter which species you would like transposon orders displayed for.</h4>
+    Species Name (Options Include: Betafish, HumanT2T, Molerat, Pufferfish): <input type='text' id='table_choice' name='table_choice'><br><br>
     <button type="submit" >Submit</button><br>
   </form>
-<br> 
-<h3>Transposon Orders By Species</h3> 
+<br>  
 <div id="dashboard_div">
-  <!--Divs that will hold each control and chart-->
+  <!--Divs that will hold the pie chart and table-->
   <br>
   <label for = "total_filter_slider">Transposon Orders That Have A Count Between:</label>
   <div id="total_filter_slider"></div>
@@ -201,12 +212,17 @@ function create_piechart_2(data2) {
   </div>
 </div>
 <br>
-<br>
-<h3 id="transposon_order_heading">Order By Species For ${transposon_choice}</h3> 
+<form onsubmit="event.preventDefault(); google_piechart_2();">
+  <h2 id="transposon_order_heading">Occurences of [your transposon order] within the Betta splendens, Takifugu rubripes, Heterocephalus
+    glaber, and Homo sapiens species</h2> 
+  <h4>Instructions: Please enter a transposon order to view the number of occurences of your chosen transposon order within a species.</h4>
+  Please enter your transposon of choice (Examples Include: LINE, SINE, DNA/Maverick): <input type='text' id='transposon_choice' name='transposon_choice'><br><br>
+  <button type="submit" >Submit</button><br>
+</form>
 <div id="dashboard_div_2">
-  <!--Divs that will hold each control and chart-->
+  <!--Divs that will hold the pie chart and table-->
   <br>
-  <label for = "total_filter_slider_2">Your specific Transposon Order </label>
+  <label for = "total_filter_slider_2">Species That Have a Count Between: </label>
   <div id="total_filter_slider_2"></div>
   <div style= "display: flex;">
     <div id = "pie_chart_2"></div>
@@ -223,9 +239,6 @@ function create_piechart_2(data2) {
 <br>
 <br>
 <br>
-
-
-<!-- Footer -->
 <footer class="w3-center w3-black w3-padding-16">
 <p>This project was developed at Boston University as
       part of BF768 Biological Database Systems Course, Spring 2023,  Instructor: Dr. Gary Benson</p>
