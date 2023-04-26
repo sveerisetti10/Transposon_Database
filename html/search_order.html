@@ -4,12 +4,14 @@
 	<title>BF 768 Database Project</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" href="mycss.css">
+	<link rel="stylesheet" href="/Users/pooja.psavla/Desktop/Team_H/mycss.css">
+
+
 
 	<title>Google Pie Chart Example</title>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script type="text/javascript">
+<script type="text/javascript">
 
 function google_piechart() {
     let tableChoice = $("#table_choice").val();
@@ -178,20 +180,20 @@ document.addEventListener('DOMContentLoaded', function() {
       <a href="Team.html" class="w3-bar-item w3-button w3-animate-zoom">Meet the Team</a>
       <a href="search_class.html" class="w3-bar-item w3-button w3-animate-zoom">Search Transposon Class</a>
       <a href="search_order.html" class="w3-bar-item w3-button w3-animate-zoom">Search Transposon Order</a>
-      <a href="search_database.html" class="w3-bar-item w3-button w3-animate-zoom">Search Database
-      </a>
+      <a href="search_database.html" class="w3-bar-item w3-button w3-animate-zoom">Search Database</a>
     </div>
   </div>
 </div>
 
 <!-- Header -->
 <header class="w3-display-container w3-content w3-wide"  style="min-height:100%;" id="home">
-  <img class="w3-image" src="order.png" alt="Image description">
+  <img class="w3-image" src="https://bioed.bu.edu/images/students_23/Team_H/bg/order.png" alt="Image description">
   <div class="w3-display-middle w3-margin-top w3-center">
     <h1 class="w3-xxlarge w3-text-white"><span class="w3-padding w3-black w3-opacity-min"><b>Search By Order</b></span> <span class="w3-hide-small w3-text-light-grey"></span></h1>
   </div>
 </header>
 
+<!-- Page content -->
 <!-- Page content -->
 <div class="w3-content w3-padding" style="max-width:1564px"><br>
   <form onsubmit="event.preventDefault(); google_piechart()">
@@ -212,12 +214,14 @@ document.addEventListener('DOMContentLoaded', function() {
   </div>
 </div>
 <br>
-<form onsubmit="event.preventDefault(); google_piechart_2();">
+<div class="w3-content w3-padding" style="max-width:1564px"><br>
+	<form onsubmit="event.preventDefault(); google_piechart_2();">
   <h2 id="transposon_order_heading">Occurences of [your transposon order] within the Betta splendens, Takifugu rubripes, Heterocephalus
     glaber, and Homo sapiens species</h2> 
   <h4>Instructions: Please enter a transposon order to view the number of occurences of your chosen transposon order within a species.</h4>
   Please enter your transposon of choice (Examples Include: LINE, SINE, DNA/Maverick): <input type='text' id='transposon_choice' name='transposon_choice'><br><br>
   <button type="submit" >Submit</button><br>
+</form>
 </form>
 <div id="dashboard_div_2">
   <!--Divs that will hold the pie chart and table-->
@@ -231,7 +235,6 @@ document.addEventListener('DOMContentLoaded', function() {
 </div>
 
 
-
 <!-- Footer -->
 <br>
 <br>
@@ -239,6 +242,9 @@ document.addEventListener('DOMContentLoaded', function() {
 <br>
 <br>
 <br>
+
+
+<!-- Footer -->
 <footer class="w3-center w3-black w3-padding-16">
 <p>This project was developed at Boston University as
       part of BF768 Biological Database Systems Course, Spring 2023,  Instructor: Dr. Gary Benson</p>
