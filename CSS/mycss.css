@@ -210,7 +210,7 @@ input[type = "text"] {height: 30px;width : 300px;font-size: 15px; }
 button[type = "submit"] {height: 30px;width : 70px;font-size: 12px;background-color: green; }
 button[type = "button"] {height: 30px;width : 70px;font-size: 12px; background-color: red;}
 
-select{height: 30px; width: 90px; font-size: 12px;}
+select{height: 30px; width: 115px; font-size: 12px;}
 #pie_chart_2{position:relative}
 #data_table_2{position:relative;top: -120px;}
 .footer{position: relative;margin-top: auto;}
