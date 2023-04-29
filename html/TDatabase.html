@@ -6,12 +6,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <!-- ><link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"> -->
 <link rel="stylesheet" href="../CSS/mycss.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
-<style>
-.paragraphs {
-  height: 200px;
-}
-</style>
 <body>
 
 <!-- Navbar (sit on top) -->
@@ -23,7 +19,7 @@
       <a href="Team.html" class="w3-bar-item w3-button w3-animate-zoom">Meet the Team</a>
       <a href="search_class.html" class="w3-bar-item w3-button w3-animate-zoom">Search Transposon Class</a>
       <a href="search_order.html" class="w3-bar-item w3-button w3-animate-zoom">Search Transposon Order</a>
-      <a href="search_database.html" class="w3-bar-item w3-button w3-animate-zoom">Search Database</a>
+      <a href="search_database.html" class="w3-bar-item w3-button w3-animate-zoom">Search Species</a>
     </div>
   </div>
 </div>
@@ -64,25 +60,44 @@
     <h3 class="w3-border-bottom w3-border-light-grey w3-padding-16"> The 4 Select Vertebrate Species </h3>
   
 	<div class="w3-row-padding">
+
     <div class="w3-col l3 m6 w3-margin-bottom">
       <img src="https://bioed.bu.edu/images/students_23/Team_H/species/pufferfish.jpeg" alt="Pufferfish" style="width:100%">
       <h3>Takifugu rubripes</h3>
-      <p class="paragraphs">Takifugu rubripes, commonly known as the Japanese pufferfish, 
-      is a marine fish species that is highly regarded for its unique ability to 
-      inflate itself like a balloon to deter predators. It is also a valuable model 
-      organism in biological research due to its small genome size and genome sequencing.</p>
-
+      <p class="paragraphs">Takifugu rubripes, commonly known as the Japanese pufferfish, is a marine fish species that is highly 
+        regarded for its unique ability to inflate itself like a balloon to deter predators. Due to its small genome size and 
+        other biological features, the pufferfish has become a popular model organism in scientific research, particularly in 
+        genomics and neurobiology. However, the pufferfish is also one of the most toxic vertebrates on the planet, containing lethal amounts 
+        of tetrodotoxin in its organs, especially the liver and ovaries. As a result, only licensed and highly trained chefs are permitted to 
+        prepare fugu for consumption in Japan, where it is considered a delicacy. The preparation of fugu is tightly regulated by the Japanese 
+        government to ensure its safety and prevent poisoning incidents. 
+      </p>
+      <p><a href="https://hgdownload.soe.ucsc.edu/hubs/GCF/901/000/725/GCF_901000725.2/GCF_901000725.2.repeatModeler.families.fa.gz" target="_blank" rel="noopener noreferrer">
+        <button class="w3-button w3-block" style="background-color:black;color:white;">Takifugu rubripes Source File</button></a></p>
     </div>
-    
+
+    <div class="w3-col l3 m6 w3-margin-bottom">
+      <img src="https://bioed.bu.edu/images/students_23/Team_H/species/bettafish.jpeg" alt="Bettafish" style="width:100%">
+      <h3> Betta splendens</h3>
+      <p class="paragraphs"> 
+      Betta splendens, also known as the Siamese fighting fish, 
+      is a popular freshwater fish species that is often kept as a pet. 
+      The males of the species are known for their aggressive behavior towards other males, 
+      and are often used in fish fights in certain parts of the world.</p>
+      <p><a href="https://hgdownload.soe.ucsc.edu/hubs/GCF/900/634/795/GCF_900634795.3/GCF_900634795.3.repeatModeler.families.fa.gz" target="_blank" rel="noopener noreferrer">
+        <button class="w3-button w3-block" style="background-color:black;color:white;">Betta splendens Source File</button></a></p>
+    </div>
+
     <div class="w3-col l3 m6 w3-margin-bottom">
   		<img src="https://bioed.bu.edu/images/students_23/Team_H/species/naked_mole_rat.jpeg" alt="Naked Mole Rat" style="width:100%">
-  <h3> Heterocephalus glaber</h3>
-  <p class="paragraphs">Heterocephalus glaber, also known as the naked mole-rat, is a small, 
-  hairless mammal that is native to parts of East Africa. 
-  It has a unique social structure and is capable of surviving in low oxygen conditions, 
-  making it an important research model for studying aging, cancer, and metabolism.</p>
-
-	</div>
+      <h3> Heterocephalus glaber</h3>
+      <p class="paragraphs">Heterocephalus glaber, also known as the naked mole-rat, is a small, 
+      hairless mammal that is native to parts of East Africa. 
+      It has a unique social structure and is capable of surviving in low oxygen conditions, 
+      making it an important research model for studying aging, cancer, and metabolism.</p>
+      <p><a href="https://hgdownload.soe.ucsc.edu/goldenPath/hetGla2/bigZips/hetGla2.repeatModeler.families.fa.gz" target="_blank" rel="noopener noreferrer">
+        <button class="w3-button w3-block" style="background-color:black;color:white;">Heterocephalus glaber Source File</button></a></p>
+	  </div>
     
     <div class="w3-col l3 m6 w3-margin-bottom">
       <img src="https://bioed.bu.edu/images/students_23/Team_H/species/humant2t.jpeg" alt="HumanT2T" style="width:100%">
@@ -92,21 +107,14 @@
       With our advanced intelligence and complex social systems, 
       humans have been able to develop advanced technology and make significant 
       impacts on the environment.</p>
+      <p><a href="https://hgdownload.soe.ucsc.edu/goldenPath/hs1/bigZips/hs1.repeatModeler.families.fa.gz" target="_blank" rel="noopener noreferrer">
+        <button class="w3-button w3-block" style="background-color:black;color:white;">Homo sapiens (T2T) Source File</button></a></p>
     </div>
-    <div class="w3-col l3 m6 w3-margin-bottom">
-      <img src="https://bioed.bu.edu/images/students_23/Team_H/species/bettafish.jpeg" alt="Bettafish" style="width:100%">
-      <h3> Betta splendens</h3>
-      <p class="paragraphs"> 
-		Betta splendens, also known as the Siamese fighting fish, 
-		is a popular freshwater fish species that is often kept as a pet. 
-		The males of the species are known for their aggressive behavior towards other males, 
-		and are often used in fish fights in certain parts of the world.</p>
 
-    </div>
   </div>
   
   <!-- Link to UCSC Source files -->
-  <div class="w3-container w3-padding-32" id="projects">
+  <!-- <div class="w3-container w3-padding-32" id="projects">
     <h3 class="w3-border-bottom w3-border-light-grey w3-padding-16"> Links to UCSC Source Files </h3>
         <p>
           <a href="https://hgdownload.soe.ucsc.edu/hubs/GCF/901/000/725/GCF_901000725.2/GCF_901000725.2.repeatModeler.families.fa.gz" target="_blank" rel="noopener noreferrer">
@@ -124,11 +132,11 @@
           </a>
         </p>
             <p>
-          <a href="https://laulab.bu.edu/index.html" target="_blank" rel="noopener noreferrer">
+          <a href="https://hgdownload.soe.ucsc.edu/hubs/GCF/900/634/795/GCF_900634795.3/GCF_900634795.3.repeatModeler.families.fa.gz" target="_blank" rel="noopener noreferrer">
             <button class="w3-button" style="background-color:black;color:white;">Betta splendens</button>
           </a>
         </p>
-  </div>
+  </div> -->
   
 <!-- Contact Section -->
 <div class="w3-container w3-padding-32" id="contact_prof">
@@ -160,10 +168,28 @@
 
 <!-- Footer -->
 <footer class="w3-center w3-black w3-padding-16">
-<p>This project was developed at Boston University as
-      part of BF768 Biological Database Systems Course, Spring 2023,  Instructor: Dr. Gary Benson</p>
-    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Boston_University_wordmark.svg/1000px-Boston_University_wordmark.svg.png?20200623211014" alt="H" width="120" height="50">
-    <p>Last revised April 26, 2023</p>
+  <p>This project was developed at Boston University as
+        part of BF768 Biological Database Systems Course, Spring 2023,  Instructor: Dr. Gary Benson</p>
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Boston_University_wordmark.svg/1000px-Boston_University_wordmark.svg.png?20200623211014" alt="H" width="120" height="50">
+      <p>Last revised April 21, 2023</p>
+      <div class="badge">
+        <i class="fa fa-eye"> Number of Views </i>
+        <span id="count"></span>
+      </div>
+      <!-- <div id="CounterVisitor"></div>
+      <p><i class="fa fa-eye">Number of views</i> <span id="viewCount"></span> -->
+      <script>
+      var n = localStorage.getItem('on_load_counter');
+
+        if (n === null) {
+            n = 0;
+        }
+    
+        n++;
+    
+        localStorage.setItem("on_load_counter", n);
+    
+        document.getElementById('count').innerHTML = n;</script>
 </footer>
 
 </body>
