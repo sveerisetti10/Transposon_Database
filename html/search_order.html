@@ -54,9 +54,13 @@ function google_piechart_2() {
     );
 }
 
+let global_data1 = null; 
+let global_data2 = null; 
+
 
 //Code to create the first pie chart and table
 function create_piechart(data) {
+    global_data1 = data;
     if (data.length === 0) {
         alert('There was no data for the table choice.');
         return;
@@ -81,8 +85,8 @@ function create_piechart(data) {
         'chartType': 'PieChart',
         'containerId': 'pie_chart',
         'options': {
-            'width': 800,
-            'height': 800,
+            'width': 600,
+            'height': 700,
             'pieSliceText': 'value',
             'legend': 'right'
         }
@@ -92,7 +96,7 @@ function create_piechart(data) {
         'chartType': 'Table',
         'containerId': 'data_table',
         'options': {
-            'width': '120%',
+            'width': '80%',
             'height': '90%',
             'showRowNumber': false,
             'page': 'enable',
@@ -108,8 +112,10 @@ function create_piechart(data) {
     dashboard.draw(dataTable);
 }
 
+
 //Code to create the second pie chart & table
 function create_piechart_2(data2) {
+    global_data2 = data2;
     if (data2.length === 0) {
         alert('There was no data for the table choice.');
         return;
@@ -132,8 +138,8 @@ function create_piechart_2(data2) {
         'chartType': 'PieChart',
         'containerId': 'pie_chart_2',
         'options': {
-            'width': 800,
-            'height': 800,
+            'width': 600,
+            'height': 700,
             'pieSliceText': 'value',
             'legend': 'right', 
         }
@@ -143,7 +149,7 @@ function create_piechart_2(data2) {
         'chartType': 'Table',
         'containerId': 'data_table_2',
         'options': {
-            'width': '120%',
+            'width': '80%',
             'height': '90%',
             'showRowNumber': false,
             'page': 'enable',
@@ -162,6 +168,46 @@ function create_piechart_2(data2) {
     dashboard_2.draw(dataTable);
 }
 
+
+function reset1() {
+  $("#table_choice").val("Betafish")
+  $("#pie_chart").empty();
+  $("#data_table").empty();
+}
+
+function reset2() {
+  $("#transposon_choice").val("Betafish")
+  $("#pie_chart_2").empty();
+  $("#data_table_2").empty();
+}
+
+
+
+function download_csv_1(data){
+  let csv1 = 'Transposon_Order,Count\n';
+  data.forEach(item => {
+    csv1 += `${item.Transposon_Order},${item.Total}\n`;
+  });
+
+  let link = document.createElement('a');
+  link.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv1);
+  link.download = 'TransposonOrder_By_Species.csv';
+  link.click();
+}
+
+function download_csv_2(data){
+  let csv2 = 'Species,Count\n';
+  data.forEach(item => {
+    csv2 += `${item.Species},${item.Count}\n`;
+  });
+
+  let link = document.createElement('a');
+  link.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv2);
+  link.download = 'Specific_TransposonOrder_Search.csv';
+  link.click();
+}
+
+
 //Load packages needed to produce the google charts visualizations
 document.addEventListener('DOMContentLoaded', function() {
   google.charts.load('current', {'packages': ['corechart', 'controls']});
@@ -174,7 +220,7 @@ document.addEventListener('DOMContentLoaded', function() {
 <!-- Navbar (sit on top) -->
 <div class="w3-top">
   <div class="w3-bar w3-white w3-wide w3-padding w3-card">
-    <a href="TDatabase.html" class="w3-bar-item w3-button w3-animate-zoom"><b>Transposon</b>Browser Home</a>
+    <a href="TDatabase.html" class="w3-bar-item w3-button w3-animate-zoom"><b>Transposon </b> Browser Home</a>
     <!-- Float links to the right. Hide them on small screens -->
     <div class="w3-right w3-hide-small">
       <a href="Team.html" class="w3-bar-item w3-button w3-animate-zoom">Meet the Team</a>
@@ -194,45 +240,69 @@ document.addEventListener('DOMContentLoaded', function() {
 </header>
 
 <!-- Page content -->
-<!-- Page content -->
 <div class="w3-content w3-padding" style="max-width:1564px"><br>
-  <form onsubmit="event.preventDefault(); google_piechart()">
-    <h2>Transposon Orders By Species</h2>
-    <h4>Instructions: Please enter which species you would like transposon orders displayed for.</h4>
-    Species Name (Options Include: Betafish, HumanT2T, Molerat, Pufferfish): <input type='text' id='table_choice' name='table_choice'><br><br>
-    <button type="submit" >Submit</button><br>
-  </form>
-<br>  
-<div id="dashboard_div">
-  <!--Divs that will hold the pie chart and table-->
-  <br>
-  <label for = "total_filter_slider">Transposon Orders That Have A Count Between:</label>
-  <div id="total_filter_slider"></div>
-  <div style= "display: flex;">
-    <div id = "pie_chart"></div>
-    <div id = "data_table" style= "width: 800px;"></div>
+  <div class = "columns-container">
+    <div class = "left-column">
+      <form onsubmit="event.preventDefault(); google_piechart()">
+        <h2>Transposon Orders By Species</h2>
+        <label for = "table_choice">Instructions: Please select which species you would like transposon orders displayed for:</label><br>
+        <select id = 'table_choice' name = 'table_choice'>
+          <option value = "Betafish">Betafish</option>
+          <option value = "HumanT2T">HumanT2T</option>
+          <option value = "Molerat">Molerat</option>
+          <option value = "Pufferfish">Pufferfish</option>
+        </select><br><br>
+        <div class = "buttons_container" style = "display:inline-flex;">
+          <button type="submit" >Submit</button><br>
+          <button type = "button" onclick = "reset1()">Reset</button>
+        </div>
+        <button class="btn btn-primary" onclick = "download_csv_1(global_data1)">Download Table 1 CSV Information</button>
+      </form>
+      <br>
+      <div id="dashboard_div">
+        <!--Divs that will hold the pie chart and table-->
+        <label for = "total_filter_slider">Transposon Orders That Have A Count Between:</label>
+        <div id="total_filter_slider"></div>
+        <div>
+          <div id = "pie_chart"></div>
+          <div id = "data_table" style= "width: 800px;"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class = "right-column">
+      <form onsubmit="event.preventDefault(); google_piechart_2();">
+        <h2 id="transposon_order_heading">Occurences of [your transposon order] within the Betta splendens, Takifugu rubripes, Heterocephalus
+          glaber, and Homo sapiens species</h2> 
+        <label for = "submit">Instructions: Please enter the transposon order of your choice in order to display the frequency of its occurence
+          in a particular species.
+          (Examples Include: LINE, SINE, DNA/Maverick): 
+        </label>
+        <input type='text' id='transposon_choice' name='transposon_choice', value = "LINE"><br><br>
+        <div class = "buttons_container" style = "display:inline-flex;">
+          <button type="submit" >Submit</button><br>
+          <button type = "button" onclick = "reset2()">Reset</button>
+        </div>
+        <button class="btn btn-primary" onclick = "download_csv_2(global_data2)">Download Table 2 CSV Information</button>
+      </form>
+      <div id="dashboard_div_2">
+        <!--Divs that will hold the pie chart and table-->
+        <br>
+        <label for = "total_filter_slider_2">Species That Have a Count Between: </label>
+        <div id="total_filter_slider_2"></div>
+        <div">
+          <div id = "pie_chart_2"></div>
+          <div id = "data_table_2" style= "width: 800px;"></div> 
+        </div> 
+      </div>
+    </div>
   </div>
-</div>
+
+  <br>  
 <br>
-<div class="w3-content w3-padding" style="max-width:1564px"><br>
-	<form onsubmit="event.preventDefault(); google_piechart_2();">
-  <h2 id="transposon_order_heading">Occurences of [your transposon order] within the Betta splendens, Takifugu rubripes, Heterocephalus
-    glaber, and Homo sapiens species</h2> 
-  <h4>Instructions: Please enter a transposon order to view the number of occurences of your chosen transposon order within a species.</h4>
-  Please enter your transposon of choice (Examples Include: LINE, SINE, DNA/Maverick): <input type='text' id='transposon_choice' name='transposon_choice'><br><br>
-  <button type="submit" >Submit</button><br>
-</form>
-</form>
-<div id="dashboard_div_2">
-  <!--Divs that will hold the pie chart and table-->
-  <br>
-  <label for = "total_filter_slider_2">Species That Have a Count Between: </label>
-  <div id="total_filter_slider_2"></div>
-  <div style= "display: flex;">
-    <div id = "pie_chart_2"></div>
-    <div id = "data_table_2" style= "width: 800px;"></div>
-  </div>
-</div>
+
+
+
 
 
 <!-- Footer -->
@@ -242,14 +312,11 @@ document.addEventListener('DOMContentLoaded', function() {
 <br>
 <br>
 <br>
-
-
-<!-- Footer -->
 <footer class="w3-center w3-black w3-padding-16">
 <p>This project was developed at Boston University as
       part of BF768 Biological Database Systems Course, Spring 2023,  Instructor: Dr. Gary Benson</p>
     <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Boston_University_wordmark.svg/1000px-Boston_University_wordmark.svg.png?20200623211014" alt="H" width="120" height="50">
-    <p>Last revised April 26, 2023</p>
+    <p>Last revised April 21, 2023</p>
 </footer>
 
 </body>
