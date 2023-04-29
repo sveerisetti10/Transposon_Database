@@ -2,7 +2,8 @@ html{box-sizing:border-box}*,*:before,*:after{box-sizing:inherit}
 
 html{-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%}body{margin:0}
 
-html,body{font-family:Verdana,sans-serif;font-size:15px;line-height:1.5}html{overflow-x:hidden}
+html,body{font-family:Verdana,sans-serif;font-size:15px;line-height:1.5;background: linear-gradient(to bottom, #FFF1DE, #FFE0C2, #FFD3B5);}
+html{overflow-x:hidden}
 h1 {margin-top: 50px; font-weight: bold;}
 h2{font-size:30px}
 h3{font-size:24px}
@@ -57,7 +58,7 @@ hr{border:0;border-top:1px solid #eee;margin:20px 0}
 .w3-main,#main{transition:margin-left .4s}
 
 .w3-bar{width:100%;overflow:hidden}.w3-center .w3-bar{display:inline-block;width:auto}
-.w3-bar .w3-bar-item{padding:8px 16px;float:left;width:auto;border:none;display:block;outline:0}
+.w3-bar .w3-bar-item{padding:8px 16px;float:left;width:auto;border:none;display:block;outline:0;} /*color:white;*/
 .w3-bar .w3-dropdown-hover,.w3-bar .w3-dropdown-click{position:static;float:left}
 .w3-bar .w3-button{white-space:normal}
 
