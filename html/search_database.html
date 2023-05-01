@@ -27,11 +27,13 @@
               return;
             } else {
               $.get("https://bioed.bu.edu/cgi-bin/students_23/Team_H/species.py", {species: species}, function(data) {
-                  google_piechart(data);
+                console.log("data", data);  
+                google_piechart(data);
+                  console.log("data", data);
               }, "json")
-              .fail(function() {
-                  console.log("error");
-              });
+              // .fail(function() {
+              //     console.log("error");
+              // });
             }
         }
       
@@ -52,7 +54,8 @@
                   title: 'Class Classification',
                   height: 500,
                   width: '90%',
-                  backgroundColor: '#f0f0f0',
+                  backgroundColor: 'transparent',
+                  fill:'transparent',
                   titleTextStyle: {
                     bold: true,
                     textAlign: 'center'
@@ -72,7 +75,8 @@
                   title: 'Order Classification',
                   height: 500,
                   width: '90%',
-                  backgroundColor: '#f0f0f0',
+                  backgroundColor: 'transparent',
+                  fill:'transparent',
                   titleTextStyle: {
                       bold: true,
                       textAlign: 'center'
@@ -92,7 +96,8 @@
                   title: 'Superfamily Classification',
                   height: 500,
                   width: '100%',
-                  backgroundColor: '#f0f0f0',
+                  backgroundColor: 'transparent',
+                  fill:'transparent',
                   titleTextStyle: {
                       bold: true,
                       textAlign: 'center'
@@ -111,7 +116,8 @@
                   title: 'Length of Sequences',
                   height: 500,
                   width: '100%',
-                  backgroundColor: '#f0f0f0',
+                  backgroundColor: 'transparent',
+                  fill: 'transparent',
                   titleTextStyle: {
                     bold: true,
                     textAlign: 'center'
@@ -151,36 +157,39 @@
 </header>
 
 <!-- Page content -->
-<div class="w3-content w3-padding" style="max-width:1564px">
-<label for="species">Select the species for which you would like to see the overview</label>
-<select id="species" name="species">
-    <option value="">--Species name--</option>
-    <option value="Homo sapiens">Homo sapiens</option>
-    <option value="Heterocephalus glaber">Heterocephalus glaber</option>
-    <option value="Takifugu rubripes">Takifugu rubripes</option>
-    <option value="Betta splendens">Betta splendens</option>
-</select>
-<button type="submit">Submit</button>
-<div class="grid">
-  <div class="grid-item" id="1"></div>
-  <div class="grid-item" id="2"></div>
-  <div class="grid-item" id="3"></div>
-  <div class="grid-item" id="4"></div>
-</div>
+<!-- <div class="w3-content w3-padding" style="max-width:1564px"> -->
+  <div class="w3-content w3-padding">
 
-<div id="new"></div>
 
-<!-- End page content -->
-</div>
+  <!-- End page content -->
+  </div>
+  
+           <center><p>Select the species name</p> <select id="species" name="species"> Select the species name
+                <option value="">--Species name--</option>
+                <option value="Homo sapiens">Homo sapiens</option>
+                <option value="Heterocephalus glaber">Heterocephalus glaber</option>
+                <option value="Takifugu rubripes">Takifugu rubripes</option>
+                <option value="Betta splendens">Betta splendens</option>
+            </select>
+            <button id="submit">Select</button>
+          <div class="grid">
+              <div class="grid-item" id="1"></div>
+              <div class="grid-item" id="2"></div>
+              <div class="grid-item" id="3"></div>
+              <div class="grid-item" id="4"></div>
+            </div>
+  
+  
+          <div id="new"></div> </center>
 
          
 <!-- Footer -->
-<!-- <footer class="w3-center w3-black w3-padding-16" >
+<footer class="w3-center w3-black w3-padding-16" >
   <p>This project was developed at Boston University as
         part of BF768 Biological Database Systems Course, Spring 2023,  Instructor: Dr. Gary Benson</p>
       <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Boston_University_wordmark.svg/1000px-Boston_University_wordmark.svg.png?20200623211014" alt="H" width="120" height="50">
       <p>Last revised April 21, 2023</p>
-  </footer> -->
+  </footer>
   
 </body>
 </html>
