@@ -212,7 +212,8 @@ button[type = "button"] {height: 30px;width : 70px;font-size: 12px; background-c
 
 select{height: 30px; width: 115px; font-size: 12px;}
 #pie_chart_2{position:relative}
-#data_table_2{position:relative;top: -120px;}
+/* #data_table_2{position:relative;top: -120px;} */
+#data_table_2{position:relative;}
 .footer{position: relative;margin-top: auto;}
 
 .paragraphs {height: 200px; overflow: scroll;}
