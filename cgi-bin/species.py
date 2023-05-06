@@ -20,17 +20,19 @@ print("Content-type: application/json\n")
 species_class = Template("""SELECT rt.repeat_class,count(*) as count
                             FROM `Sequence` s join Repeat_Type rt on s.TID = rt.TID JOIN Species s2 ON s.SPID = s2.SPID  
                             WHERE s2.species_name = '${sname}'
-                            GROUP BY  rt.repeat_class""")
+                            GROUP BY  rt.repeat_class
+                            ORDER BY count DESC""")
 
 species_order = Template("""SELECT rt.repeat_order, count(*) as count
                             FROM `Sequence` s join Repeat_Type rt on s.TID = rt.TID JOIN Species s2 ON s.SPID = s2.SPID  
                             WHERE s2.species_name = '${sname}'
-                            GROUP BY  rt.repeat_order""")
+                            GROUP BY  rt.repeat_order
+                            ORDER BY count DESC""")
 
 species_superfamily = Template("""SELECT rt.repeat_superfamily, count(*) as count
                                 FROM `Sequence` s join Repeat_Type rt on s.TID = rt.TID JOIN Species s2 ON s.SPID = s2.SPID  
                                 WHERE s2.species_name = '${sname}'
-                                GROUP BY  rt.repeat_superfamily""")
+                                ORDER BY count DESC""")
 
 species_length = Template("""SELECT s.`length`
                             FROM `Sequence` s join Repeat_Type rt on s.TID = rt.TID JOIN Species s2 ON s.SPID = s2.SPID  
