@@ -4,7 +4,7 @@
 	<title>BF 768 Database Project</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" href="../CSS/mycss.css">
+	<link rel="stylesheet" href= "/Users/sveerisetti/Desktop/search_order/mycss.css">
 
 
 
@@ -56,6 +56,8 @@ function google_piechart_2() {
 
 let global_data1 = null; 
 let global_data2 = null; 
+let pieChart = null; 
+let pieChart_2 = null;
 
 
 //Code to create the first pie chart and table
@@ -81,14 +83,15 @@ function create_piechart(data) {
         }
     });
     // Create the pie chart with select options
-    var pieChart = new google.visualization.ChartWrapper({
+    pieChart = new google.visualization.ChartWrapper({
         'chartType': 'PieChart',
         'containerId': 'pie_chart',
         'options': {
             'width': 600,
             'height': 700,
             'pieSliceText': 'value',
-            'legend': 'right'
+            'legend': 'right', 
+            backgroundColor : 'transparent'
         }
     });
     // Create the table with select options
@@ -100,7 +103,8 @@ function create_piechart(data) {
             'height': '90%',
             'showRowNumber': false,
             'page': 'enable',
-            'pageSize': 10
+            'pageSize': 10, 
+            backgroundColor : 'transparent'
         }
     });
 
@@ -134,7 +138,7 @@ function create_piechart_2(data2) {
         }
     });
     // Create the pie chart with specific options
-    var pieChart_2 = new google.visualization.ChartWrapper({
+    pieChart_2 = new google.visualization.ChartWrapper({
         'chartType': 'PieChart',
         'containerId': 'pie_chart_2',
         'options': {
@@ -142,6 +146,7 @@ function create_piechart_2(data2) {
             'height': 700,
             'pieSliceText': 'value',
             'legend': 'right', 
+            backgroundColor : 'transparent'
         }
     });
     // Create the table with specific options
@@ -153,7 +158,8 @@ function create_piechart_2(data2) {
             'height': '90%',
             'showRowNumber': false,
             'page': 'enable',
-            'pageSize': 10
+            'pageSize': 10, 
+            backgroundColor : 'transparent'
         }
     });
 
@@ -176,7 +182,7 @@ function reset1() {
 }
 
 function reset2() {
-  $("#transposon_choice").val("Betafish")
+  $("#transposon_choice").val("LINE")
   $("#pie_chart_2").empty();
   $("#data_table_2").empty();
 }
@@ -206,6 +212,39 @@ function download_csv_2(data){
   link.download = 'Specific_TransposonOrder_Search.csv';
   link.click();
 }
+
+
+function download_piechart_1 () {
+  if(!global_data1) {
+    alert("There is no pie chart avaliable to download");
+    return;
+  }
+
+  var pieChartsaving = pieChart.getChart();
+  var imgURL = pieChartsaving.getImageURI();
+  let link = document.createElement('a');
+  link.href = imgURL;
+  link.download = 'PieChart1_TransposonOrder_By_Species.png';
+  link.click();
+
+}
+
+
+function download_piechart_2 () {
+  if(!global_data2) {
+    alert("There is not a pie chart avaliable for you to download");
+    return;
+  }
+
+  var pieChartsaving2= pieChart_2.getChart();
+  var imgURL = pieChartsaving2.getImageURI();
+  let link = document.createElement('a');
+  link.href = imgURL;
+  link.download = 'PieChart2_TransposonOrder_By_Species.png';
+  link.click();
+
+}
+
 
 
 //Load packages needed to produce the google charts visualizations
@@ -257,6 +296,7 @@ document.addEventListener('DOMContentLoaded', function() {
           <button type = "button" onclick = "reset1()">Reset</button>
         </div>
         <button class="btn btn-primary" onclick = "download_csv_1(global_data1)">Download Table 1 CSV Information</button>
+        <button class="btn btn-primary" onclick = "download_piechart_1()">Download Pie Chart 1</button>
       </form>
       <br>
       <div id="dashboard_div">
@@ -284,6 +324,7 @@ document.addEventListener('DOMContentLoaded', function() {
           <button type = "button" onclick = "reset2()">Reset</button>
         </div>
         <button class="btn btn-primary" onclick = "download_csv_2(global_data2)">Download Table 2 CSV Information</button>
+        <button class="btn btn-primary" onclick = "download_piechart_2()">Download Pie Chart 2</button>
       </form>
       <div id="dashboard_div_2">
         <!--Divs that will hold the pie chart and table-->

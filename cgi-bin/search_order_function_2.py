@@ -21,7 +21,8 @@ SELECT s2.species_name as Species, repeat_type as Transposon_Order, count(*) as 
 FROM `Sequence` s JOIN Repeat_Type rt using(TID)
 JOIN Species s2 using (SPID)
 WHERE repeat_type REGEXP '{}'
-GROUP BY s.SPID  
+GROUP BY s.SPID
+ORDER BY Count DESC
 """
 
 # Process form data

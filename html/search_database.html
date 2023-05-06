@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html>
-    <head>Search by Species<br>
+    <head>Summary by Species<br>
       <meta charset="UTF-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1">
       <link rel="stylesheet" href="../CSS/mycss.css">
            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
           <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script> 
-      <title>Search by Species</title>
+      <title>Summary by Species</title>
       <script>
         $(document).ready(function(){
           $('.grid-item').hide()
@@ -27,11 +27,13 @@
               return;
             } else {
               $.get("https://bioed.bu.edu/cgi-bin/students_23/Team_H/species.py", {species: species}, function(data) {
-                  google_piechart(data);
+                console.log("data", data);  
+                google_piechart(data);
+                  console.log("data", data);
               }, "json")
-              .fail(function() {
-                  console.log("error");
-              });
+              // .fail(function() {
+              //     console.log("error");
+              // });
             }
         }
       
@@ -52,7 +54,8 @@
                   title: 'Class Classification',
                   height: 500,
                   width: '90%',
-                  backgroundColor: '#f0f0f0',
+                  backgroundColor: 'transparent',
+                  fill:'transparent',
                   titleTextStyle: {
                     bold: true,
                     textAlign: 'center'
@@ -72,7 +75,8 @@
                   title: 'Order Classification',
                   height: 500,
                   width: '90%',
-                  backgroundColor: '#f0f0f0',
+                  backgroundColor: 'transparent',
+                  fill:'transparent',
                   titleTextStyle: {
                       bold: true,
                       textAlign: 'center'
@@ -92,7 +96,8 @@
                   title: 'Superfamily Classification',
                   height: 500,
                   width: '100%',
-                  backgroundColor: '#f0f0f0',
+                  backgroundColor: 'transparent',
+                  fill:'transparent',
                   titleTextStyle: {
                       bold: true,
                       textAlign: 'center'
@@ -111,7 +116,8 @@
                   title: 'Length of Sequences',
                   height: 500,
                   width: '100%',
-                  backgroundColor: '#f0f0f0',
+                  backgroundColor: 'transparent',
+                  fill: 'transparent',
                   titleTextStyle: {
                     bold: true,
                     textAlign: 'center'
@@ -128,7 +134,7 @@
       </script>
     </head>
     			<!-- Navbar (sit on top) -->
-<body>
+
 <div class="w3-top">
   <div class="w3-bar w3-black w3-wide w3-padding w3-card">
     <a href="TDatabase.html" class="w3-bar-item w3-button w3-animate-zoom"><b>Transposon </b> Browser Home</a>
@@ -137,41 +143,43 @@
       <a href="Team.html" class="w3-bar-item w3-button w3-animate-zoom">Meet the Team</a>
       <a href="search_class.html" class="w3-bar-item w3-button w3-animate-zoom">Search Transposon Class</a>
       <a href="search_order.html" class="w3-bar-item w3-button w3-animate-zoom">Search Transposon Order</a>
-      <a href="search_database.html" class="w3-bar-item w3-button w3-animate-zoom">Search Species</a>
+      <a href="search_database.html" class="w3-bar-item w3-button w3-animate-zoom">Species Summary</a>
     </div>
   </div>
 </div>
-
+<body>
 <!-- Header -->
 <header class="w3-display-container w3-content w3-wide" style="min-height:100%;" id="home">
   <center><img class="w3-image w3-animate-zoom" src="https://bioed.bu.edu/images/students_23/Team_H/bg/search.png" alt="Image description"></center>
   <div class="w3-display-middle w3-margin-top w3-center">
-    <h1 class="w3-xxlarge w3-text-white"><span class="w3-padding w3-black w3-opacity-min"><b>Search by Species</b></span> <span class="w3-hide-small w3-text-light-grey"></span></h1>
+    <h1 class="w3-xxlarge w3-text-white"><span class="w3-padding w3-black w3-opacity-min"><b>Summary by Species</b></span> <span class="w3-hide-small w3-text-light-grey"></span></h1>
   </div>
 </header>
 
 <!-- Page content -->
-<div class="w3-content w3-padding" style="max-width:1564px">
-<label for="species">Select the species for which you would like to see the overview</label>
-<select id="species" name="species">
-    <option value="">--Species name--</option>
-    <option value="Homo sapiens">Homo sapiens</option>
-    <option value="Heterocephalus glaber">Heterocephalus glaber</option>
-    <option value="Takifugu rubripes">Takifugu rubripes</option>
-    <option value="Betta splendens">Betta splendens</option>
-</select>
-<button type="submit">Submit</button>
+<!-- <div class="w3-content w3-padding" style="max-width:1564px"> -->
+  <div class="w3-content w3-padding">
+    <P>Instructions: Select the species for which you would like to see the summary</P>
+    <p>Select the species name</p> <select id="species" name="species">
+      <option value="">--Species name--</option>
+      <option value="Homo sapiens">Homo sapiens</option>
+      <option value="Heterocephalus glaber">Heterocephalus glaber</option>
+      <option value="Takifugu rubripes">Takifugu rubripes</option>
+      <option value="Betta splendens">Betta splendens</option>
+  </select>
+  <button id="submit" type="submit">Submit</button>
 <div class="grid">
-  <div class="grid-item" id="1"></div>
-  <div class="grid-item" id="2"></div>
-  <div class="grid-item" id="3"></div>
-  <div class="grid-item" id="4"></div>
-</div>
+    <div class="grid-item" id="1"></div>
+    <div class="grid-item" id="2"></div>
+    <div class="grid-item" id="3"></div>
+    <div class="grid-item" id="4"></div>
+  </div>
 
-<div id="new"></div>
+  <!-- End page content -->
+  </div>
 
-<!-- End page content -->
-</div>
+  
+  <!-- <div id="new"></div> </center> -->
 
          
 <!-- Footer -->

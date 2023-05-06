@@ -4,7 +4,18 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<link rel="stylesheet" href="../CSS/mycss.css">
+<!-- <link rel="stylesheet" href="../CSS/mycss.css"> -->
+<link rel="stylesheet" href="./mycss.css">
+	<style>
+	.button {
+		display: inline-block;
+  		padding: 10px 20px;
+  		background-color: #007bff;
+  		color: #fff;
+  		text-decoration: none;
+  		border-radius: 4px;
+	}
+		</style>
 
 	
 	<title>Search By Class</title>
@@ -56,25 +67,36 @@
 			
 			
 			// loading Google charts info
-			google.charts.load('current', {'packages': ['corechart', 'table']});
+			google.charts.load('current', {'packages': ['corechart', 'table', 'gauge']});
 			google.charts.setOnLoadCallback(function () {
 				// format processed data for use w/ Google charts
 				var chart_data = google.visualization.arrayToDataTable(formatted_results);
-				console.log('Chart data:', chart_data);
+				console.log('Chart data:', typeof chart_data);
 				// options for the piechart
 				var options = {
 				
 					title: 'Transposon Orders by Class',
+					backgroundColor: 'transparent',
+					legend: {position: 'top', maxLines: 4},
+					chartArea: {width: '100%'},
 					is3D: true,
 					colors: ['#0072B2', '#E69F00', '#009E73', '#F0E442', '#CC79A7', '#D55E00', '#56B4E9', '#0072B2', '#F0E442', '#009E73', '#D55E00', '#CC79A7']
 				};
 				
 				// finally creating the pie chart
 				var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+				
+				// enable PNG download
+				google.visualization.events.addListener(chart, 'ready', function () {
+					piechart.innerHTML = '<img src=' + chart.getImageURI() + '>';
+				});
+				
+				// draw the chart
 				chart.draw(chart_data, options);
 				
 				// create a table with the same data
 				var table = new google.visualization.Table(document.getElementById('table1'));
+				console.log('Table', typeof table);
 				// execute here
 				table.draw(chart_data, {
 					title: 'Transposon Orders by Class',
@@ -82,6 +104,16 @@
 					width: '50%'
 				});
 				
+				
+				$('#Export').click(function () {
+				
+					var csvFormattedDataTable = google.visualization.dataTableToCsv(chart_data);
+					var encodedUri = 'data:application/csv;charset=utf-8,' + encodeURIComponent(csvFormattedDataTable);
+					this.href = encodedUri;
+					this.download = 'orders_by_class.csv';
+					this.target = '_';
+					
+				});
 			});
 		}
 
@@ -134,12 +166,22 @@
 				var options2 = {
 				
 					title: 'Transposon Superfamilies by Class',
+					backgroundColor: 'transparent',
+					legend: {position: 'top', maxLines: 4},
+					chartArea: {width: '100%'},
 					is3D: true,
 					colors: ['#1B9E77', '#D95F02', '#7570B3', '#E7298A', '#66A61E', '#E6AB02', '#A6761D', '#666666', '#FDAE61', '#FDBF6F', '#FDD0A2', '#F46D43']
 				};
 				
 				// finally creating the pie chart
 				var chart2 = new google.visualization.PieChart(document.getElementById('piechart2'));
+				
+				// enable PNG download
+				google.visualization.events.addListener(chart2, 'ready', function () {
+					piechart2.innerHTML = '<img src=' + chart2.getImageURI() + '>';
+				});
+				
+				// draw the chart
 				chart2.draw(chart_data2, options2);
 				
 				// create a table with the same data
@@ -150,10 +192,38 @@
 					showRowNumber: false, 
 					width: '50%'
 				});
+				// draw the toolbar
+    			var components = [
+      				{type: 'html', datasource: chart_data2},
+      				{type: 'csv', datasource: chart_data2},
+      				{type: 'htmlcode', datasource: chart_data2}
+    			];
+    			
+    			$('#Export2').click(function () {
 				
+					var csvFormattedDataTable2 = google.visualization.dataTableToCsv(chart_data2);
+					var encodedUri = 'data:application/csv;charset=utf-8,' + encodeURIComponent(csvFormattedDataTable2);
+					this.href = encodedUri;
+					this.download = 'super_families_by_class.csv';
+					this.target = '_';
+					
+				});
 			});
+		
 		}
 
+		// implement a reset button to reset the results of the user search
+		function reset_button() {
+			$('#result_count').empty();
+			$('#class_choice').val('Select class')
+  			$('#piechart').empty();
+  			$('#table1').empty();
+  			$('#piechart2').empty();
+  			$("#table2").empty();
+  			$('#toolbar_div').empty();
+  			$('#toolbar_div1').empty();
+		}
+		
 
 	</script>
 </head>
@@ -188,19 +258,27 @@
 	<h3>Please select which transposon class you would like to search by from the dropdown menu below.</h3>
 		<label for='class_choice'>Select transposon class:</label>
 		<select id='class_choice' name='class_choice'>
-			<option value=''>Select class</option>
+			<option selected='true' disabled>Select class</option>
 			<option value='DNA'>DNA</option>
 			<option value='RNA'>RNA</option>
 			<option value='Unknown'>Unknown</option>
 		</select><br>
-		<button type='submit'>Submit</button>
+		<div class = 'button_container' style = 'display:inline-flex;'>
+          <button type='submit' >Submit</button><br>
+          <button type='button' onclick='reset_button()'>Reset</button>
+        </div>
 		
 
 	<div id='result_count'></div>
 	<div id='piechart' style='width: 900px; height: 500px;'></div>
 	<div id='table1'></div>
+	<a id='Export' href='#piechart' class='button'>Download as CSV</a>
+	
 	<div id='piechart2' style='width: 900px; height: 500px;'></div>
 	<div id='table2'></div>
+	<div id='toolbar_div'></div>
+	<a id='Export2' href='#piechart2' class='button'>Download as CSV</a>
+	
 
 <!-- End page content -->
 </div>
