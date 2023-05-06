@@ -1,4 +1,144 @@
 <!DOCTYPE html>
+<<<<<<< Updated upstream
+=======
+<<<<<<< HEAD
+<html>
+    <head>Summary by Species<br>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <link rel="stylesheet" href="mycss.css">
+           <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+          <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script> 
+      <title>Summary by Species</title>
+      <script>
+        $(document).ready(function(){
+          $('.grid-item').hide()
+            $("#submit").click(function(){
+                retrieve_results();
+                // showdiv();
+            })
+        })
+      
+        function showdiv(){
+          var div = document.getElementById("myDiv");
+          div.style.display = "block";
+        }
+      
+        function retrieve_results(){
+            var species = document.getElementById("species").value;
+            if (species === ""){
+              return;
+            } else {
+              $.get("https://bioed.bu.edu/cgi-bin/students_23/Team_H/species.py", {species: species}, function(data) {
+                console.log("data", data);  
+                google_piechart(data);
+                  console.log("data", data);
+              }, "json")
+              // .fail(function() {
+              //     console.log("error");
+              // });
+            }
+        }
+      
+        function google_piechart(data){
+            console.log("data", data);
+            // var data = JSON.parse(data);
+            google.charts.load('current', { 'packages': ['corechart'] });
+            google.charts.setOnLoadCallback(drawChart);
+            function drawChart(){
+              $('.grid-item').show()
+                //Class
+                var dataTable1 = new google.visualization.DataTable();
+                dataTable1.addColumn('string', 'Class');
+                dataTable1.addColumn('number', 'Count');
+                dataTable1.addRows(data['class']);
+      
+                var options = {
+                  title: 'Class Classification',
+                  height: 500,
+                  width: '90%',
+                  backgroundColor: 'transparent',
+                  fill:'transparent',
+                  titleTextStyle: {
+                    bold: true,
+                    textAlign: 'center'
+                  }
+                };
+      
+                var chart = new google.visualization.PieChart(document.getElementById('1'));
+                chart.draw(dataTable1, options);
+                
+                //Order
+                var dataTable2 = new google.visualization.DataTable();
+                dataTable2.addColumn('string', 'Order');
+                dataTable2.addColumn('number', 'Count');
+                dataTable2.addRows(data['order']);
+                
+                var options = {
+                  title: 'Order Classification',
+                  height: 500,
+                  width: '90%',
+                  backgroundColor: 'transparent',
+                  fill:'transparent',
+                  titleTextStyle: {
+                      bold: true,
+                      textAlign: 'center'
+                    }
+                };
+      
+                var chart = new google.visualization.PieChart(document.getElementById('2'));
+                chart.draw(dataTable2, options);
+      
+                //Superfamily
+                var dataTable3 = new google.visualization.DataTable();
+                dataTable3.addColumn('string', 'Superfamily');
+                dataTable3.addColumn('number', 'Count');
+                dataTable3.addRows(data['superfamily']);
+                
+                var options = {
+                  title: 'Superfamily Classification',
+                  height: 500,
+                  width: '100%',
+                  backgroundColor: 'transparent',
+                  fill:'transparent',
+                  titleTextStyle: {
+                      bold: true,
+                      textAlign: 'center'
+                  }
+                };
+                var chart = new google.visualization.PieChart(document.getElementById('3'));
+                chart.draw(dataTable3, options);
+      
+                // Length
+                var dataTable4 = new google.visualization.DataTable();
+                // dataTable4.addColumn('number', 'SequenceID');
+                dataTable4.addColumn('number', 'Length');
+                dataTable4.addRows(data['length']);
+                
+                var options = {
+                  title: 'Length of Sequences',
+                  height: 500,
+                  width: '100%',
+                  backgroundColor: 'transparent',
+                  fill: 'transparent',
+                  titleTextStyle: {
+                    bold: true,
+                    textAlign: 'center'
+                  },
+                  hAxis: {title: 'Sequence Length'},
+                  vAxis: {title: 'Count'},
+                  legend: 'none'
+              };
+                var chart = new google.visualization.Histogram(document.getElementById('4'));
+                chart.draw(dataTable4, options);
+            }
+           
+        }
+      </script>
+    </head>
+    			<!-- Navbar (sit on top) -->
+=======
+>>>>>>> Stashed changes
 <html lang="en">
 
 <head>
@@ -16,6 +156,10 @@
     
   </style>
 </head>
+<<<<<<< Updated upstream
+=======
+>>>>>>> 95bf2f5feca6ed983a4eb40e709db7156edeb3f5
+>>>>>>> Stashed changes
 
 <body>
   <!-- Header -->
