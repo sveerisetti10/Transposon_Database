@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <link rel="stylesheet" href="mycss.css">
+<
+<!-- 
 	<style>
 	.button {
 		display: inline-block;
@@ -15,6 +17,7 @@
   		border-radius: 4px;
 	}
 		</style>
+ -->
 
 	
 	<title>Search By Class</title>
@@ -28,6 +31,10 @@
 		function google_piechart() {
 			
 			var class_choice = $('#class_choice').val();
+			if(!class_choice) {
+    			alert("Please select a class from the dropdown menu.");
+    			return;
+  			}
 			console.log('Selected class:', class_choice);
 
 			// get data from output of Python script
@@ -42,8 +49,13 @@
 			);
 		}
 		
+		
+		
+
+		
 		// define that function here, now
 		function create_piechart(res, class_choice) {
+			
 			console.log('Processed data:', res, class_choice);
 			
 			// use strict equality operator here...don't want weird results from just `==`
@@ -85,11 +97,8 @@
 				// finally creating the pie chart
 				var chart = new google.visualization.PieChart(document.getElementById('piechart'));
 				
-				// enable PNG download
-				google.visualization.events.addListener(chart, 'ready', function () {
-					piechart.innerHTML = '<img src=' + chart.getImageURI() + '>';
-				});
-				
+
+// 				
 				// draw the chart
 				chart.draw(chart_data, options);
 				
@@ -103,7 +112,7 @@
 					width: '50%'
 				});
 				
-				
+				// enable CSV download
 				$('#Export').click(function () {
 				
 					var csvFormattedDataTable = google.visualization.dataTableToCsv(chart_data);
@@ -112,9 +121,20 @@
 					this.download = 'orders_by_class.csv';
 					this.target = '_';
 					
+				});		
+				
+				// enable PNG download
+				$('#png_download').click(function () {
+    				var png = chart.getImageURI();
+    				this.href = png;
+    				this.download = 'orders_by_class_piechart.png';
+    				this.target = '_';
 				});
 			});
 		}
+		
+		
+
 
 		// FOR SUPERFAMILY /////////////////
 		////////////////////////////////////
@@ -174,11 +194,7 @@
 				
 				// finally creating the pie chart
 				var chart2 = new google.visualization.PieChart(document.getElementById('piechart2'));
-				
-				// enable PNG download
-				google.visualization.events.addListener(chart2, 'ready', function () {
-					piechart2.innerHTML = '<img src=' + chart2.getImageURI() + '>';
-				});
+			
 				
 				// draw the chart
 				chart2.draw(chart_data2, options2);
@@ -207,6 +223,14 @@
 					this.target = '_';
 					
 				});
+				
+				// enable PNG download
+				$('#png_download2').click(function () {
+    				var png2 = chart2.getImageURI();
+    				this.href = png2;
+    				this.download = 'superfamilies_by_class_piechart.png';
+    				this.target = '_';
+				});
 			});
 		
 		}
@@ -221,7 +245,56 @@
   			$("#table2").empty();
   			$('#toolbar_div').empty();
   			$('#toolbar_div1').empty();
+  			$('#Export').removeAttr('href');
+  			$('#png_download').removeAttr('href');
+  			$('#Export2').removeAttr('href');
+  			$('#png_download2').removeAttr('href');
 		}
+		
+		function show_downloads() {
+			document.getElementById("Export").style.display = "inline";
+    		document.getElementById("png_download").style.display = "inline";
+    		document.getElementById("Export2").style.display = "inline";
+    		document.getElementById("png_download2").style.display = "inline";
+		}
+		
+		function anchors_reappear () {
+			var anchor1 = document.createElement('a');
+			anchor.setAttribute('id', 'Export');
+			anchor.setAttribute('href', '#piechart');
+			anchor.setAttribute('class', 'button');
+			anchor.setAttribute('style', 'display:none;');
+			anchor1.innerHTML = 'Download as CSV';
+			
+			var anchor2 = document.createElement('a');
+			anchor2.setAttribute('id', 'png_download');
+			anchor2.setAttribute('href', '#piechart');
+			anchor2.setAttribute('class', 'button');
+			anchor2.setAttribute('style', 'display:none;');
+			anchor2.innerHTML = 'Download Image';
+			
+			var anchor3 = document.createElement('a');
+			anchor3.setAttribute('id', 'Export2');
+			anchor3.setAttribute('href', '#piechart2');
+			anchor3.setAttribute('class', 'button');
+			anchor3.setAttribute('style', 'display:none;');
+			anchor3.innerHTML = 'Download as CSV';
+
+			
+			var anchor4 = document.createElement('a');
+			anchor4.setAttribute('id', 'png_download2');
+			anchor4.setAttribute('href', '#piechart2');
+			anchor4.setAttribute('class', 'button');
+			anchor4.setAttribute('style', 'display:none;');
+			anchor4.innerHTML = 'Download Image';
+			
+			// append the anchors to their respective elements
+  			document.getElementById('Export').appendChild(anchor1);
+  			document.getElementById('png_download').appendChild(anchor2);
+  			document.getElementById('Export2').appendChild(anchor3);
+  			document.getElementById('png_download2').appendChild(anchor4);
+		}
+		
 		
 
 	</script>
@@ -239,7 +312,6 @@
       <a href="search_class.html" class="w3-bar-item w3-button w3-animate-zoom">Search Transposon Class</a>
       <a href="search_order.html" class="w3-bar-item w3-button w3-animate-zoom">Search Transposon Order</a>
       <a href="search_database.html" class="w3-bar-item w3-button w3-animate-zoom">Search Species</a>
-      <a href="help.html" class="w3-bar-item w3-button w3-animate-zoom">Help Page</a>
     </div>
   </div>
 </div>
@@ -264,21 +336,25 @@
 			<option value='Unknown'>Unknown</option>
 		</select><br>
 		<div class = 'button_container' style = 'display:inline-flex;'>
-          <button type='submit' >Submit</button><br>
-          <button type='button' onclick='reset_button()'>Reset</button>
+          <button type='submit' onclick='show_downloads();'>Submit</button><br>
+          <button type='button' onclick='reset_button(anchors_reappear);'>Reset</button>
         </div>
 		
 
 	<div id='result_count'></div>
 	<div id='piechart' style='width: 900px; height: 500px;'></div>
 	<div id='table1'></div>
-	<a id='Export' href='#piechart' class='button'>Download as CSV</a>
+	<a id='Export' href='#piechart' class='button' style='display:none;'>Download as CSV</a>
+	<a id='png_download' href='#piechart' class='button' style='display:none;'>Download Image</a>
+	
+	<br></br>
+	<br></br>
 	
 	<div id='piechart2' style='width: 900px; height: 500px;'></div>
 	<div id='table2'></div>
 	<div id='toolbar_div'></div>
-	<a id='Export2' href='#piechart2' class='button'>Download as CSV</a>
-	
+	<a id='Export2' href='#piechart2' class='button' style='display:none;'>Download as CSV</a>
+	<a id='png_download2' href='#piechart2' class='button' style='display:none;'>Download Image</a>
 
 <!-- End page content -->
 </div>
