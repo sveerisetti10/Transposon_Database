@@ -218,7 +218,7 @@
     			$('#Export2').click(function () {
 					// headers
 					var headers2 = ['Transposon Superfamily', 'Count'];
-					var csvFormattedDataTable2 = headers2.join(','), + '\n' + google.visualization.dataTableToCsv(chart_data2);
+					var csvFormattedDataTable2 = headers2.join(',') + '\n' + google.visualization.dataTableToCsv(chart_data2);
 					var encodedUri = 'data:application/csv;charset=utf-8,' + encodeURIComponent(csvFormattedDataTable2);
 					this.href = encodedUri;
 					this.download = 'super_families_by_class.csv';
