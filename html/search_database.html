@@ -63,9 +63,9 @@
                       }
                     };
           
-                    var chart = new google.visualization.PieChart(document.getElementById('1'));
-                    chart.draw(dataTable1, options);
-                    $('#1').append("<a id='classtable' href='#1' class='button'>Download as CSV</a>&nbsp;");
+                    var chart1 = new google.visualization.PieChart(document.getElementById('1'));
+                    chart1.draw(dataTable1, options);
+                    $('#1').append("<a id='classtable' href='#1' class='button'>Download as CSV</a>&nbsp;&nbsp;&nbsp;");
                     $('#1').append("<a id='classimage' href='#1' class='button';>Download as Image</a>");
 
 
@@ -76,6 +76,13 @@
                         this.download = 'class.csv';
                         this.target = '_';
                     });
+
+                    $(document).on('click','#classimage',function(){
+                      var png = chart1.getImageURI();
+                      this.href = png;
+                      this.download = 'class.png';
+                      this.target = '_';
+                    })
                     
                     //Order
                     var dataTable2 = new google.visualization.DataTable();
@@ -96,9 +103,9 @@
                         }
                     };
           
-                    var chart = new google.visualization.PieChart(document.getElementById('2'));
-                    chart.draw(dataTable2, options);
-                    $('#2').append("<a id='ordertable' href='#2' class='button'>Download as CSV</a>&nbsp;");
+                    var chart2 = new google.visualization.PieChart(document.getElementById('2'));
+                    chart2.draw(dataTable2, options);
+                    $('#2').append("<a id='ordertable' href='#2' class='button'>Download as CSV</a>&nbsp;&nbsp;&nbsp;");
                     $('#2').append("<a id='orderimage' href='#2' class='button'>Download as Image</a>");
                     
                     $(document).on('click', '#ordertable', function() {
@@ -109,6 +116,12 @@
                         this.target = '_';
                     });
 
+                    $(document).on('click','#orderimage',function(){
+                      var png = chart2.getImageURI();
+                      this.href = png;
+                      this.download = 'order.png';
+                      this.target = '_';
+                    })
 
 
           
@@ -130,9 +143,9 @@
                           textAlign: 'center'
                       }
                     };
-                    var chart = new google.visualization.PieChart(document.getElementById('3'));
-                    chart.draw(dataTable3, options);
-                    $('#3').append("<a id='sftable' href='#3' class='button'>Download as CSV</a>&nbsp;");
+                    var chart3 = new google.visualization.PieChart(document.getElementById('3'));
+                    chart3.draw(dataTable3, options);
+                    $('#3').append("<a id='sftable' href='#3' class='button'>Download as CSV</a>&nbsp;&nbsp;&nbsp;");
                     $('#3').append("<a id='sfimage' href='#3' class='button'>Download as Image</a>");
 
                     $(document).on('click', '#sftable', function() {
@@ -142,6 +155,13 @@
                         this.download = 'superfamily.csv';
                         this.target = '_';
                     });
+                    
+                    $(document).on('click','#sfimage',function(){
+                      var png = chart3.getImageURI();
+                      this.href = png;
+                      this.download = 'superfamily.png';
+                      this.target = '_';
+                    })
           
                     // Length
                     var dataTable4 = new google.visualization.DataTable();
@@ -164,10 +184,10 @@
                       vAxis: {title: 'Count'},
                       legend: 'none'
                   };
-                    var chart = new google.visualization.Histogram(document.getElementById('4'));
-                    chart.draw(dataTable4, options);
-                    $('#4').append("<a id='lengthtable' href='#4' class='button'>Download as CSV</a>&nbsp;");
-                    $('#4').append("<a id='lengthimage' href='#4' class='button'>Download as Image</a>");
+                    var chart4 = new google.visualization.Histogram(document.getElementById('4'));
+                    chart4.draw(dataTable4, options);
+                    $('#4').append("<a id='lengthtable' href='#4' class='button' style=' >Download as CSV</a>&nbsp;&nbsp;&nbsp;");
+                    $('#4').append("<a id='lengthimage' href='#4' class='button' style='>Download as Image</a>");
 
                     $(document).on('click', '#lengthtable', function() {
                         var csvFormattedDataTable = google.visualization.dataTableToCsv(dataTable4);
@@ -176,6 +196,13 @@
                         this.download = 'length.csv';
                         this.target = '_';
                     });
+
+                    $(document).on('click','#lengthimage',function(){
+                      var png = chart4.getImageURI();
+                      this.href = png;
+                      this.download = 'class.png';
+                      this.target = '_';
+                    })
                 }
                
             }
@@ -206,7 +233,7 @@
     
     <main>
         <div class="w3-content w3-padding">
-            <P>Instructions: Select the species for which you would like to see the summary</P>
+            <h3>Please select the species to display the summary for below.</h3>
             <p>Select the species name</p> <select id="species" name="species">
               <option value="">--Species name--</option>
               <option value="Homo sapiens">Homo sapiens</option>
