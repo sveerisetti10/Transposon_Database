@@ -45,7 +45,7 @@
                 function drawChart(){
                   $('.grid-item').show()
                     //Class
-                    var dataTable1 = new google.visualization.DataTable();
+                    let dataTable1 = new google.visualization.DataTable();
                     dataTable1.addColumn('string', 'Class');
                     dataTable1.addColumn('number', 'Count');
                     dataTable1.addRows(data['class']);
@@ -65,6 +65,17 @@
           
                     var chart = new google.visualization.PieChart(document.getElementById('1'));
                     chart.draw(dataTable1, options);
+                    $('#1').append("<a id='classtable' href='#1' class='button'>Download as CSV</a>&nbsp;");
+                    $('#1').append("<a id='classimage' href='#1' class='button';>Download as Image</a>");
+
+
+                    $(document).on('click', '#classtable', function() {
+                        var csvFormattedDataTable = google.visualization.dataTableToCsv(dataTable1);
+                        var encodedUri = 'data:application/csv;charset=utf-8,' + encodeURIComponent(csvFormattedDataTable);
+                        this.href = encodedUri;
+                        this.download = 'class.csv';
+                        this.target = '_';
+                    });
                     
                     //Order
                     var dataTable2 = new google.visualization.DataTable();
@@ -87,6 +98,19 @@
           
                     var chart = new google.visualization.PieChart(document.getElementById('2'));
                     chart.draw(dataTable2, options);
+                    $('#2').append("<a id='ordertable' href='#2' class='button'>Download as CSV</a>&nbsp;");
+                    $('#2').append("<a id='orderimage' href='#2' class='button'>Download as Image</a>");
+                    
+                    $(document).on('click', '#ordertable', function() {
+                        var csvFormattedDataTable = google.visualization.dataTableToCsv(dataTable2);
+                        var encodedUri = 'data:application/csv;charset=utf-8,' + encodeURIComponent(csvFormattedDataTable);
+                        this.href = encodedUri;
+                        this.download = 'order.csv';
+                        this.target = '_';
+                    });
+
+
+
           
                     //Superfamily
                     var dataTable3 = new google.visualization.DataTable();
@@ -108,6 +132,16 @@
                     };
                     var chart = new google.visualization.PieChart(document.getElementById('3'));
                     chart.draw(dataTable3, options);
+                    $('#3').append("<a id='sftable' href='#3' class='button'>Download as CSV</a>&nbsp;");
+                    $('#3').append("<a id='sfimage' href='#3' class='button'>Download as Image</a>");
+
+                    $(document).on('click', '#sftable', function() {
+                        var csvFormattedDataTable = google.visualization.dataTableToCsv(dataTable3);
+                        var encodedUri = 'data:application/csv;charset=utf-8,' + encodeURIComponent(csvFormattedDataTable);
+                        this.href = encodedUri;
+                        this.download = 'superfamily.csv';
+                        this.target = '_';
+                    });
           
                     // Length
                     var dataTable4 = new google.visualization.DataTable();
@@ -132,6 +166,16 @@
                   };
                     var chart = new google.visualization.Histogram(document.getElementById('4'));
                     chart.draw(dataTable4, options);
+                    $('#4').append("<a id='lengthtable' href='#4' class='button'>Download as CSV</a>&nbsp;");
+                    $('#4').append("<a id='lengthimage' href='#4' class='button'>Download as Image</a>");
+
+                    $(document).on('click', '#lengthtable', function() {
+                        var csvFormattedDataTable = google.visualization.dataTableToCsv(dataTable4);
+                        var encodedUri = 'data:application/csv;charset=utf-8,' + encodeURIComponent(csvFormattedDataTable);
+                        this.href = encodedUri;
+                        this.download = 'length.csv';
+                        this.target = '_';
+                    });
                 }
                
             }
@@ -177,7 +221,6 @@
                 <div class="grid-item" id="2"></div>
                 <div class="grid-item" id="3"></div>
                 <div class="grid-item" id="4"></div>
-                
             </div>
           </div>
         
