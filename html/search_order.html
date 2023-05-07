@@ -58,6 +58,8 @@ let global_data1 = null;
 let global_data2 = null; 
 let pieChart = null; 
 let pieChart_2 = null;
+let tableChart = null;
+let tableChart_2 = null;
 
 
 //Code to create the first pie chart and table
@@ -95,7 +97,7 @@ function create_piechart(data) {
         }
     });
     // Create the table with select options
-    var tableChart = new google.visualization.ChartWrapper({
+    tableChart = new google.visualization.ChartWrapper({
         'chartType': 'Table',
         'containerId': 'data_table',
         'options': {
@@ -150,7 +152,7 @@ function create_piechart_2(data2) {
         }
     });
     // Create the table with specific options
-    var tableChart_2 = new google.visualization.ChartWrapper({
+    tableChart_2 = new google.visualization.ChartWrapper({
         'chartType': 'Table',
         'containerId': 'data_table_2',
         'options': {
@@ -189,24 +191,42 @@ function reset2() {
 
 
 
-function download_csv_1(data){
-  let csv1 = 'Transposon_Order,Count\n';
-  data.forEach(item => {
-    csv1 += `${item.Transposon_Order},${item.Total}\n`;
-  });
+function download_csv_1(stop){
+  stop.preventDefault();
 
+  if (!global_data1) {
+    alert("There is not a table ready for download");
+    return;
+  }
+
+  let filter_data = tableChart.getDataTable();
+  let csv1 = 'Transposon_Order,Count\n';
+
+  for (let i = 0; i < filter_data.getNumberOfRows(); i++) {
+    csv1 += `${filter_data.getValue(i, 0)},${filter_data.getValue(i, 1)}\n`;
+  }
+  
   let link = document.createElement('a');
   link.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv1);
   link.download = 'TransposonOrder_By_Species.csv';
   link.click();
 }
 
-function download_csv_2(data){
-  let csv2 = 'Species,Count\n';
-  data.forEach(item => {
-    csv2 += `${item.Species},${item.Count}\n`;
-  });
+function download_csv_2(stop){
 
+  stop.preventDefault();
+  if (!global_data2) {
+    alert("There is no table available to download");
+    return;
+  }
+
+  let filter_data_2 = tableChart_2.getDataTable();
+  let csv2 = 'Species,Count\n';
+
+  for (let i = 0; i < filter_data_2.getNumberOfRows(); i++) {
+    csv2 += `${filter_data_2.getValue(i, 0)},${filter_data_2.getValue(i, 1)}\n`;
+  }
+  
   let link = document.createElement('a');
   link.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv2);
   link.download = 'Specific_TransposonOrder_Search.csv';
@@ -297,8 +317,9 @@ document.addEventListener('DOMContentLoaded', function() {
           <button type= "submit" >Submit</button><br>
           <button type = "button" onclick = "reset1()">Reset</button>
         </div>
-        <button class="button" onclick = "download_csv_1(global_data1)">Download Table 1 CSV Information</button>
-        <button class="button" onclick = "download_piechart_1()">Download Pie Chart 1</button>
+          <button class="button" onclick="download_csv_1(event)">Download Table 1 CSV Information</button>
+          <button class="button" onclick="download_piechart_1()">Download Pie Chart 1</button>
+        <!-- ... -->
       </form>
       <br>
       <div id="dashboard_div">
@@ -325,8 +346,8 @@ document.addEventListener('DOMContentLoaded', function() {
           <button type="submit" >Submit</button><br>
           <button type = "button" onclick = "reset2()">Reset</button>
         </div>
-        <button class="button" onclick = "download_csv_2(global_data2)">Download Table 2 CSV Information</button>
-        <button class="button" onclick = "download_piechart_2()">Download Pie Chart 2</button>
+          <button class="button" onclick="download_csv_2(event)">Download Table 2 CSV Information</button>
+          <button class="button" onclick="download_piechart_2()">Download Pie Chart 2</button>
       </form>
       <div id="dashboard_div_2">
         <!--Divs that will hold the pie chart and table-->
