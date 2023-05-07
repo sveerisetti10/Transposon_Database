@@ -100,7 +100,7 @@
 
 // 				
 				// draw the chart
-				chart.draw(chart_data, options);
+				chart.draw(chart_data, options).append("<a id='Export' href='#piechart' class='button' style='display:none;'>Download as CSV</a>'").append("<a id='png_download' href='#piechart' class='button' style='display:none;'>Download Image</a>");
 				
 				// create a table with the same data
 				var table = new google.visualization.Table(document.getElementById('table1'));
@@ -198,7 +198,7 @@
 			
 				
 				// draw the chart
-				chart2.draw(chart_data2, options2);
+				chart2.draw(chart_data2, options2).append("<a id='Export2' href='#piechart2' class='button' style='display:none;'>Download as CSV</a>").append("<a id='png_download2' href='#piechart2' class='button' style='display:none;'>Download Image</a>");
 				
 				// create a table with the same data
 				var table2 = new google.visualization.Table(document.getElementById('table2'));
@@ -348,8 +348,8 @@
 	<div id='result_count'></div>
 	<div id='piechart' style='width: 900px; height: 500px;'></div>
 	<div id='table1'></div>
-	<a id='Export' href='#piechart' class='button' style='display:none;'>Download as CSV</a>
-	<a id='png_download' href='#piechart' class='button' style='display:none;'>Download Image</a>
+	<!-- <a id='Export' href='#piechart' class='button' style='display:none;'>Download as CSV</a> -->
+	<!-- <a id='png_download' href='#piechart' class='button' style='display:none;'>Download Image</a> -->
 	
 	<br></br>
 	<br></br>
@@ -357,8 +357,8 @@
 	<div id='piechart2' style='width: 900px; height: 500px;'></div>
 	<div id='table2'></div>
 	<div id='toolbar_div'></div>
-	<a id='Export2' href='#piechart2' class='button' style='display:none;'>Download as CSV</a>
-	<a id='png_download2' href='#piechart2' class='button' style='display:none;'>Download Image</a>
+	<!-- <a id='Export2' href='#piechart2' class='button' style='display:none;'>Download as CSV</a> -->
+	<!-- <a id='png_download2' href='#piechart2' class='button' style='display:none;'>Download Image</a> -->
 
 <!-- End page content -->
 </div>
