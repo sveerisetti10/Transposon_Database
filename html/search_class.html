@@ -114,8 +114,9 @@
 				
 				// enable CSV download
 				$('#Export').click(function () {
-				
-					var csvFormattedDataTable = google.visualization.dataTableToCsv(chart_data);
+					// adding headers
+					var headers = ['Transposon Orders', 'Count'];
+					var csvFormattedDataTable = headers.join(',') + '\n' + google.visualization.dataTableToCsv(chart_data);
 					var encodedUri = 'data:application/csv;charset=utf-8,' + encodeURIComponent(csvFormattedDataTable);
 					this.href = encodedUri;
 					this.download = 'orders_by_class.csv';
@@ -215,8 +216,9 @@
     			];
     			
     			$('#Export2').click(function () {
-				
-					var csvFormattedDataTable2 = google.visualization.dataTableToCsv(chart_data2);
+					// headers
+					var headers2 = ['Transposon Superfamily', 'Count'];
+					var csvFormattedDataTable2 = headers2.join(','), + '\n' + google.visualization.dataTableToCsv(chart_data2);
 					var encodedUri = 'data:application/csv;charset=utf-8,' + encodeURIComponent(csvFormattedDataTable2);
 					this.href = encodedUri;
 					this.download = 'super_families_by_class.csv';
