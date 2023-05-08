@@ -15,11 +15,14 @@
 
 function google_piechart() {
     let tableChoice = $("#table_choice").val();
+    if(!tableChoice){
+      return;
+    }
     //Clear out any previous visualizations from the divisions
     $("#pie_chart").empty()
     $("#data_table").empty()
     if (tableChoice == ""){
-      alert("There is no text in the species name text box");
+      alert("Error: There is no text in the species name text box");
     }
     //We reference the Python Script that will give us the sorted transposon orders
     $.get("https://bioed.bu.edu/cgi-bin/students_23/sv/search_order.py",
@@ -35,10 +38,13 @@ function google_piechart() {
 
 function google_piechart_2() {
     let transposonChoice = $("#transposon_choice").val();
+    if(!transposonChoice){
+      return;
+    }
     $("#pie_chart_2").empty()
     $("#data_table_2").empty()
     if (transposonChoice == ""){
-      alert("There is no text in the transposon choice text box");
+      alert("Error: There is no text in the transposon choice text box");
     }
     $("#transposon_order_heading").text(`Occurences of ` + transposonChoice + ` within the Betta splendens, Takifugu rubripes, Heterocephalus
     glaber, and Homo sapiens species`);
@@ -60,13 +66,14 @@ let pieChart = null;
 let pieChart_2 = null;
 let tableChart = null;
 let tableChart_2 = null;
+$("#total_filter_slider").hide();
 
 
 //Code to create the first pie chart and table
 function create_piechart(data) {
     global_data1 = data;
     if (data.length === 0) {
-        alert('There was no data for the table choice.');
+        alert('Error: There was no data for the table choice.');
         return;
     }
 
@@ -123,7 +130,7 @@ function create_piechart(data) {
 function create_piechart_2(data2) {
     global_data2 = data2;
     if (data2.length === 0) {
-        alert('There was no data for the table choice.');
+        alert('Error: There was no data for the transposon of choice.');
         return;
     }
 
@@ -176,28 +183,65 @@ function create_piechart_2(data2) {
     dashboard_2.draw(dataTable);
 }
 
+let isSubmit = false;
 
 function reset1() {
-  $("#table_choice").val("Betafish")
+  $("#table_choice").val('')
   $("#pie_chart").empty();
   $("#data_table").empty();
+  $("#total_filter_slider").hide();
+
+  isSubmit = false;
 }
+
+
 
 function reset2() {
-  $("#transposon_choice").val("LINE")
+  $("#transposon_choice").val('')
   $("#pie_chart_2").empty();
   $("#data_table_2").empty();
+  $("#total_filter_slider_2").hide();
+  isSubmit = false;
 }
 
-
-let isSubmit = false;
 
 function submitHandeling(chartType) {
   isSubmit = true;
+  let alertdisplay = false;
+  if(chartType === "reset"){
+    $("#total_filter_slider").hide();
+    $("#total_filter_slider_2").hide();
+    return;
+  }
+  
   if(chartType === 'chart1') {
+    let tableChoice = $("#table_choice").val();
+    let validtablechoices = ['Betafish', 'HumanT2T', 'Molerat', 'Pufferfish']
+    if (!validtablechoices.includes (tableChoice)) {
+      alert("Error: Please enter a valid species of choice in the text box");
+      alertdisplay = true;
+    }
+
+    if (!alertdisplay) {
+      $("#total_filter_slider").show();
+    } else {
+      $("#total_filter_slider").hide();
+    }
     google_piechart();
+    
   }
   else if (chartType === 'chart2'){
+    let transposonChoice = $("#transposon_choice").val();
+    if(transposonChoice === "") {
+      alert("Error: Please enter a transposon of choice in the text box");
+      alertdisplay = true;
+    }
+    if(!alertdisplay) {
+      $("#total_filter_slider_2").show();
+    } else {
+      $("#total_filter_slider_2").hide();
+
+    }
     google_piechart_2();
   }
 }
@@ -212,12 +256,12 @@ function download_csv_1(stop){
   stop.preventDefault();
 
   if(!isSubmit) {
-    alert("Please click submit first to generate the pie chart and table!");
+    alert("Error: No content avaliable. Please make sure to select a species name and click submit in order to generate the pie chart and table!");
     return;
   }
 
   if (!global_data1) {
-    alert("There is not a table ready for download");
+    alert("Error: There is not a table ready for download");
     return;
   }
 
@@ -239,11 +283,11 @@ function download_csv_2(stop){
   stop.preventDefault();
 
   if(!isSubmit) {
-    alert("Plase click submit first to generate the pie chart and table!");
+    alert("Error: No content avaliable. Please make sure to select a species name and click submit in order to generate the pie chart and table!");
     return;
   }
   if (!global_data2) {
-    alert("There is no table available to download");
+    alert("Error: There is no table available to download");
     return;
   }
 
@@ -266,13 +310,13 @@ function download_piechart_1 (event) {
 
   event.preventDefault();
   if (!isSubmit) {
-    alert("Please click submit first to generate the pie chart and table!")
+    alert("Error: No content avaliable. Please make sure to select a species name and click submit in order to generate the pie chart and table!")
     
     return;
     }
 
   if(!global_data1) {
-    alert("There is no pie chart avaliable to download");
+    alert("Error: There is no pie chart avaliable to download");
     return;
   }
 
@@ -291,18 +335,18 @@ function download_piechart_1 (event) {
 function download_piechart_2 (event) {
   event.preventDefault();
   if (!isSubmit) {
-    alert("Please click submit first to generate the pie chart and table!");
+    alert("Error: No content avaliable. Please make sure to select a species name and click submit in order to generate the pie chart and table!");
     return;
   }
 
   if(!global_data2) {
-    alert("There is not a pie chart avaliable for you to download");
+    alert("Error: There is not a pie chart avaliable for you to download");
     return;
   }
   
   var pieChartsaving2= pieChart_2.getChart();
   if(!pieChartsaving2) {
-    alert("wait for the pie chart to load please");
+    alert("Error: Wait for the pie chart to load please");
     return;
   }
   var imgURL = pieChartsaving2.getImageURI();
@@ -354,13 +398,11 @@ document.addEventListener('DOMContentLoaded', function() {
     <div class = "left-column">
       <form onsubmit="event.preventDefault(); submitHandeling('chart1')">
         <h2>Transposon Orders By Species</h2>
-        <label for = "table_choice">Instructions: Please select which species you would like transposon orders displayed for:</label><br>
-        <select id = 'table_choice' name = 'table_choice'>
-          <option value = "Betafish">Betafish</option>
-          <option value = "HumanT2T">HumanT2T</option>
-          <option value = "Molerat">Molerat</option>
-          <option value = "Pufferfish">Pufferfish</option>
-        </select><br><br>
+        <label for = "table_choice">Instructions: Please select which species you would like transposon orders displayed for.
+          Caution: The input box is case sensitive and also requires correct spelling! 
+          Options Include: Betafish, HumanT2T, Molerat, and Pufferfish
+        </label><br>
+        <input type='text' id='table_choice' name='table_choice', placeholder="Enter a Species Name"><br><br>
         <div class = "buttons_container" style = "display:inline-flex;">
           <button type= "submit" >Submit</button><br>
           <button type = "button" onclick = "reset1()">Reset</button>
@@ -389,7 +431,7 @@ document.addEventListener('DOMContentLoaded', function() {
           in a particular species.
           (Examples Include: LINE, SINE, DNA/Maverick): 
         </label>
-        <input type='text' id='transposon_choice' name='transposon_choice', value = "LINE"><br><br>
+        <input type='text' id='transposon_choice' name='transposon_choice', placeholder="Enter a Transposon"><br><br>
         <div class = "buttons_container" style = "display:inline-flex;">
           <button type="submit" >Submit</button><br>
           <button type = "button" onclick = "reset2()">Reset</button>
@@ -422,7 +464,7 @@ document.addEventListener('DOMContentLoaded', function() {
   <p>This project was developed at Boston University as
         part of BF768 Biological Database Systems Course, Spring 2023,  Instructor: Dr. Gary Benson</p>
       <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Boston_University_wordmark.svg/1000px-Boston_University_wordmark.svg.png?20200623211014" alt="H" width="120" height="50">
-      <p>Last revised April 21, 2023</p>
+      <p>Last revised May 8, 2023</p>
   </footer>
 
 </body>
