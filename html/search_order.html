@@ -190,9 +190,31 @@ function reset2() {
 }
 
 
+let isSubmit = false;
+
+function submitHandeling(chartType) {
+  isSubmit = true;
+  if(chartType === 'chart1') {
+    google_piechart();
+  }
+  else if (chartType === 'chart2'){
+    google_piechart_2();
+  }
+}
+
+function displayPieChart() {
+  if(!isSubmit) {
+    return;
+  }
+}
 
 function download_csv_1(stop){
   stop.preventDefault();
+
+  if(!isSubmit) {
+    alert("Please click submit first to generate the pie chart and table!");
+    return;
+  }
 
   if (!global_data1) {
     alert("There is not a table ready for download");
@@ -215,6 +237,11 @@ function download_csv_1(stop){
 function download_csv_2(stop){
 
   stop.preventDefault();
+
+  if(!isSubmit) {
+    alert("Plase click submit first to generate the pie chart and table!");
+    return;
+  }
   if (!global_data2) {
     alert("There is no table available to download");
     return;
@@ -234,7 +261,16 @@ function download_csv_2(stop){
 }
 
 
-function download_piechart_1 () {
+function download_piechart_1 (event) {
+  
+
+  event.preventDefault();
+  if (!isSubmit) {
+    alert("Please click submit first to generate the pie chart and table!")
+    
+    return;
+    }
+
   if(!global_data1) {
     alert("There is no pie chart avaliable to download");
     return;
@@ -247,16 +283,28 @@ function download_piechart_1 () {
   link.download = 'PieChart1_TransposonOrder_By_Species.png';
   link.click();
 
+  
+
 }
 
 
-function download_piechart_2 () {
+function download_piechart_2 (event) {
+  event.preventDefault();
+  if (!isSubmit) {
+    alert("Please click submit first to generate the pie chart and table!");
+    return;
+  }
+
   if(!global_data2) {
     alert("There is not a pie chart avaliable for you to download");
     return;
   }
-
+  
   var pieChartsaving2= pieChart_2.getChart();
+  if(!pieChartsaving2) {
+    alert("wait for the pie chart to load please");
+    return;
+  }
   var imgURL = pieChartsaving2.getImageURI();
   let link = document.createElement('a');
   link.href = imgURL;
@@ -304,7 +352,7 @@ document.addEventListener('DOMContentLoaded', function() {
 <div class="w3-content w3-padding" style="max-width:1564px"><br>
   <div class = "columns-container">
     <div class = "left-column">
-      <form onsubmit="event.preventDefault(); google_piechart()">
+      <form onsubmit="event.preventDefault(); submitHandeling('chart1')">
         <h2>Transposon Orders By Species</h2>
         <label for = "table_choice">Instructions: Please select which species you would like transposon orders displayed for:</label><br>
         <select id = 'table_choice' name = 'table_choice'>
@@ -318,7 +366,7 @@ document.addEventListener('DOMContentLoaded', function() {
           <button type = "button" onclick = "reset1()">Reset</button>
         </div>
           <button class="button" onclick="download_csv_1(event)">Download Table 1 CSV Information</button>
-          <button class="button" onclick="download_piechart_1()">Download Pie Chart 1</button>
+          <button class="button" onclick="download_piechart_1(event)">Download Pie Chart 1</button>
         <!-- ... -->
       </form>
       <br>
@@ -334,7 +382,7 @@ document.addEventListener('DOMContentLoaded', function() {
     </div>
 
     <div class = "right-column">
-      <form onsubmit="event.preventDefault(); google_piechart_2();">
+      <form onsubmit="event.preventDefault(); submitHandeling('chart2')">
         <h2 id="transposon_order_heading">Occurences of the selected transposon order within the Betta splendens, Takifugu rubripes, Heterocephalus
           glaber, and Homo sapiens species</h2> 
         <label for = "submit">Instructions: Please enter the transposon order of your choice in order to display the frequency of its occurence
@@ -347,7 +395,7 @@ document.addEventListener('DOMContentLoaded', function() {
           <button type = "button" onclick = "reset2()">Reset</button>
         </div>
           <button class="button" onclick="download_csv_2(event)">Download Table 2 CSV Information</button>
-          <button class="button" onclick="download_piechart_2()">Download Pie Chart 2</button>
+          <button class="button" onclick="download_piechart_2(event)">Download Pie Chart 2</button>
       </form>
       <div id="dashboard_div_2">
         <!--Divs that will hold the pie chart and table-->

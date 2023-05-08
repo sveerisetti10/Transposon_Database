@@ -10,19 +10,21 @@
             $(document).ready(function(){
               $('.grid-item').hide()
                 $("#submit").click(function(){
+
                     retrieve_results();
-                    showdiv();
+                    // showdiv();
                 })
             })
           
-            function showdiv(){
-              var div = document.getElementById("myDiv");
-              div.style.display = "block";
-            }
+            // function showdiv(){
+            //   var div = document.getElementById("myDiv");
+            //   div.style.display = "block";
+            // }
           
             function retrieve_results(){
                 var species = document.getElementById("species").value;
                 if (species === ""){
+                  alert("Please select a species from the dropdown menu.");
                   return;
                 } else {
                   // "https://bioed.bu.edu/cgi-bin/students_23/Team_H/species.py
@@ -70,7 +72,10 @@
 
 
                     $(document).on('click', '#classtable', function() {
-                        var csvFormattedDataTable = google.visualization.dataTableToCsv(dataTable1);
+                        var headerRow1 = ['Class', 'Count'];
+                        // var csvFormattedDataTable = headerRow.join(',') + '\n' + google.visualization.dataTableToCsv(dataTable);
+
+                        var csvFormattedDataTable = headerRow1.join(',') + '\n' + google.visualization.dataTableToCsv(dataTable1);
                         var encodedUri = 'data:application/csv;charset=utf-8,' + encodeURIComponent(csvFormattedDataTable);
                         this.href = encodedUri;
                         this.download = 'class.csv';
@@ -109,7 +114,8 @@
                     $('#2').append("<a id='orderimage' href='#2' class='button'>Download as Image</a>");
                     
                     $(document).on('click', '#ordertable', function() {
-                        var csvFormattedDataTable = google.visualization.dataTableToCsv(dataTable2);
+                        var headerRow2 = ['Order', 'Count'];
+                        var csvFormattedDataTable = headerRow2.join(',') + '\n' + google.visualization.dataTableToCsv(dataTable2);
                         var encodedUri = 'data:application/csv;charset=utf-8,' + encodeURIComponent(csvFormattedDataTable);
                         this.href = encodedUri;
                         this.download = 'order.csv';
@@ -149,7 +155,8 @@
                     $('#3').append("<a id='sfimage' href='#3' class='button'>Download as Image</a>");
 
                     $(document).on('click', '#sftable', function() {
-                        var csvFormattedDataTable = google.visualization.dataTableToCsv(dataTable3);
+                      var headerRow3 = ['Superfamily', 'Count'];
+                        var csvFormattedDataTable = headerRow3.join(',') + '\n' + google.visualization.dataTableToCsv(dataTable3);
                         var encodedUri = 'data:application/csv;charset=utf-8,' + encodeURIComponent(csvFormattedDataTable);
                         this.href = encodedUri;
                         this.download = 'superfamily.csv';
