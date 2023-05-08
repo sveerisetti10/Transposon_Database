@@ -7,7 +7,6 @@
 	<link rel="stylesheet" href= "mycss.css">
 
 
-
 	<title>Google Pie Chart Example</title>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -18,17 +17,17 @@ function google_piechart() {
     if(!tableChoice){
       return;
     }
-    //Clear out any previous visualizations from the divisions
+    // Clear out any previous visualizations from the divisions
     $("#pie_chart").empty()
     $("#data_table").empty()
     if (tableChoice == ""){
       alert("Error: There is no text in the species name text box");
     }
-    //We reference the Python Script that will give us the sorted transposon orders
+    // Here we can reference the Python Script that will give us the sorted transposon orders
     $.get("https://bioed.bu.edu/cgi-bin/students_23/sv/search_order.py",
-    //Selector that matches Python server side script
+    // Selector that matches Python server side script
         {selector: "piechart", table_choice: tableChoice},
-        //Use the create_piechart function, which uses Google charts in order to produce our pie chart
+        // Use the create_piechart function, which uses Google charts in order to produce our pie chart
         function (data) {
             create_piechart(data);
         },
@@ -36,6 +35,8 @@ function google_piechart() {
     );
 }
 
+// Similar to before, this function will be responsible for producing the pie chart data. The function will query the database for a particular 
+// transposon order
 function google_piechart_2() {
     let transposonChoice = $("#transposon_choice").val();
     if(!transposonChoice){
@@ -56,10 +57,12 @@ function google_piechart_2() {
         function (data2) {
             create_piechart_2(data2);
         },
+        // The final data should be in the form of a .json file. This data will be used to make visualizations.
         "json"
     );
 }
 
+// Here we create global variables that can be references outside of functions.
 let global_data1 = null; 
 let global_data2 = null; 
 let pieChart = null; 
@@ -69,7 +72,7 @@ let tableChart_2 = null;
 $("#total_filter_slider").hide();
 
 
-//Code to create the first pie chart and table
+// This function will actually generate the interactive and live pie chart within a division
 function create_piechart(data) {
     global_data1 = data;
     if (data.length === 0) {
@@ -78,12 +81,12 @@ function create_piechart(data) {
     }
 
     let formattedData = data.map(item => [item.Transposon_Order, item.Total]);
-    //Add the table headers with Transposon_Order and Count
+    // Add the table headers with Transposon_Order and Count
     formattedData.unshift(["Transposon_Order", "Count"]);
-    //Create variable for the dashboard
+    // This will create a variable for the dashboard
     var dashboard = new google.visualization.Dashboard(
         document.getElementById('dashboard_div'));
-    //Create variable for the slider for live filtering of count
+    // Create variable for the slider for live filtering of count
     var filter_slider = new google.visualization.ControlWrapper({
         'controlType': 'NumberRangeFilter',
         'containerId': 'total_filter_slider',
@@ -103,7 +106,7 @@ function create_piechart(data) {
             backgroundColor : 'transparent'
         }
     });
-    // Create the table with select options
+    // Here we create our table, with specific options
     tableChart = new google.visualization.ChartWrapper({
         'chartType': 'Table',
         'containerId': 'data_table',
@@ -122,11 +125,12 @@ function create_piechart(data) {
     dashboard.bind(filter_slider, tableChart);
 
     var dataTable = google.visualization.arrayToDataTable(formattedData);
+    // Produce final dashboard
     dashboard.draw(dataTable);
 }
 
 
-//Code to create the second pie chart & table
+// Similar to before, the only difference is that we will create the second pie chart this time. 
 function create_piechart_2(data2) {
     global_data2 = data2;
     if (data2.length === 0) {
@@ -183,8 +187,11 @@ function create_piechart_2(data2) {
     dashboard_2.draw(dataTable);
 }
 
+// This global variable is set to boolean false as default. This will be used in error handling. 
 let isSubmit = false;
 
+// This is the function for the first reset button. By clicking the button, the data tables and pie charts associated with the first 
+// query should disappear. 
 function reset1() {
   $("#table_choice").val('')
   $("#pie_chart").empty();
@@ -194,8 +201,8 @@ function reset1() {
   isSubmit = false;
 }
 
-
-
+// This is the function for the second reset button. By clicking the button, the data tables and pie charts associated with the second 
+// query should disappear. 
 function reset2() {
   $("#transposon_choice").val('')
   $("#pie_chart_2").empty();
@@ -204,7 +211,8 @@ function reset2() {
   isSubmit = false;
 }
 
-
+// This is the error handeling function for the submit button. This function makes sure that all inputs are in the correct form. If not, 
+// the function will display a corresponding error. 
 function submitHandeling(chartType) {
   isSubmit = true;
   let alertdisplay = false;
@@ -214,6 +222,7 @@ function submitHandeling(chartType) {
     return;
   }
   
+  // This input box is case sensitive because of the query, therefore, there is a restriction of valid table choices. 
   if(chartType === 'chart1') {
     let tableChoice = $("#table_choice").val();
     let validtablechoices = ['Betafish', 'HumanT2T', 'Molerat', 'Pufferfish']
@@ -222,6 +231,7 @@ function submitHandeling(chartType) {
       alertdisplay = true;
     }
 
+    // If there is no error alert, then the slider should be displayed
     if (!alertdisplay) {
       $("#total_filter_slider").show();
     } else {
@@ -252,9 +262,11 @@ function displayPieChart() {
   }
 }
 
+// Function to download the live slider table as a CSV file. 
 function download_csv_1(stop){
   stop.preventDefault();
 
+  // This code checks to make sure that there is content avaliable to download. 
   if(!isSubmit) {
     alert("Error: No content avaliable. Please make sure to select a species name and click submit in order to generate the pie chart and table!");
     return;
@@ -268,6 +280,7 @@ function download_csv_1(stop){
   let filter_data = tableChart.getDataTable();
   let csv1 = 'Transposon_Order,Count\n';
 
+  // Append line by line data to csv1 so that it can be downloaded as a .csv. We also make sure that the data passes the filter threshold.
   for (let i = 0; i < filter_data.getNumberOfRows(); i++) {
     csv1 += `${filter_data.getValue(i, 0)},${filter_data.getValue(i, 1)}\n`;
   }
@@ -278,6 +291,7 @@ function download_csv_1(stop){
   link.click();
 }
 
+// Same as before, the function responsible for downloading the second live data table. 
 function download_csv_2(stop){
 
   stop.preventDefault();
@@ -294,6 +308,7 @@ function download_csv_2(stop){
   let filter_data_2 = tableChart_2.getDataTable();
   let csv2 = 'Species,Count\n';
 
+  // We make sure that the data passes the slider threshold that the user will set. 
   for (let i = 0; i < filter_data_2.getNumberOfRows(); i++) {
     csv2 += `${filter_data_2.getValue(i, 0)},${filter_data_2.getValue(i, 1)}\n`;
   }
@@ -304,10 +319,9 @@ function download_csv_2(stop){
   link.click();
 }
 
-
+// Function responsible for creating the first download pie chart.  
 function download_piechart_1 (event) {
   
-
   event.preventDefault();
   if (!isSubmit) {
     alert("Error: No content avaliable. Please make sure to select a species name and click submit in order to generate the pie chart and table!")
@@ -324,14 +338,14 @@ function download_piechart_1 (event) {
   var imgURL = pieChartsaving.getImageURI();
   let link = document.createElement('a');
   link.href = imgURL;
+  // Default name of the .png pie chart
   link.download = 'PieChart1_TransposonOrder_By_Species.png';
   link.click();
 
-  
 
 }
 
-
+// Function responsible for creating the second download pie chart.  
 function download_piechart_2 (event) {
   event.preventDefault();
   if (!isSubmit) {
@@ -357,9 +371,7 @@ function download_piechart_2 (event) {
 
 }
 
-
-
-//Load packages needed to produce the google charts visualizations
+// These are the packages needed to produce the google charts visualizations
 document.addEventListener('DOMContentLoaded', function() {
   google.charts.load('current', {'packages': ['corechart', 'controls']});
 });
@@ -454,9 +466,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
   <br>  
 <br>
-
-
-
 
 
 <!-- Footer -->
