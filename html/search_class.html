@@ -80,6 +80,7 @@
 			// loading Google charts info
 			google.charts.load('current', {'packages': ['corechart', 'table', 'gauge']});
 			google.charts.setOnLoadCallback(function () {
+			
 				// format processed data for use w/ Google charts
 				var chart_data = google.visualization.arrayToDataTable(formatted_results);
 				console.log('Chart data:', typeof chart_data);
@@ -134,6 +135,8 @@
     				this.target = '_';
 				});
 			});
+			
+			callback();
 		}
 		
 		
@@ -240,7 +243,7 @@
     				this.target = '_';
 				});
 			});
-		
+			
 		}
 
 		// implement a reset button to reset the results of the user search
@@ -259,49 +262,21 @@
   			$('#png_download2').removeAttr('href');
 		}
 		
-		function show_downloads() {
-			document.getElementById("Export").style.display = "inline";
-    		document.getElementById("png_download").style.display = "inline";
-    		document.getElementById("Export2").style.display = "inline";
-    		document.getElementById("png_download2").style.display = "inline";
-		}
-		
-		function anchors_reappear () {
-			var anchor1 = document.createElement('a');
-			anchor.setAttribute('id', 'Export');
-			anchor.setAttribute('href', '#piechart');
-			anchor.setAttribute('class', 'button');
-			anchor.setAttribute('style', 'display:none;');
-			anchor1.innerHTML = 'Download as CSV';
-			
-			var anchor2 = document.createElement('a');
-			anchor2.setAttribute('id', 'png_download');
-			anchor2.setAttribute('href', '#piechart');
-			anchor2.setAttribute('class', 'button');
-			anchor2.setAttribute('style', 'display:none;');
-			anchor2.innerHTML = 'Download Image';
-			
-			var anchor3 = document.createElement('a');
-			anchor3.setAttribute('id', 'Export2');
-			anchor3.setAttribute('href', '#piechart2');
-			anchor3.setAttribute('class', 'button');
-			anchor3.setAttribute('style', 'display:none;');
-			anchor3.innerHTML = 'Download as CSV';
 
-			
-			var anchor4 = document.createElement('a');
-			anchor4.setAttribute('id', 'png_download2');
-			anchor4.setAttribute('href', '#piechart2');
-			anchor4.setAttribute('class', 'button');
-			anchor4.setAttribute('style', 'display:none;');
-			anchor4.innerHTML = 'Download Image';
-			
-			// append the anchors to their respective elements
-  			document.getElementById('Export').appendChild(anchor1);
-  			document.getElementById('png_download').appendChild(anchor2);
-  			document.getElementById('Export2').appendChild(anchor3);
-  			document.getElementById('png_download2').appendChild(anchor4);
-		}
+
+		function showAnchors() {
+    		document.getElementById('Export').style.display = 'inline';
+    		document.getElementById('png_download').style.display = 'inline';
+    		document.getElementById('Export2').style.display = 'inline';
+    		document.getElementById('png_download2').style.display = 'inline';
+  		}
+  
+  		function hideAnchors() {
+    		document.getElementById('Export').style.display = 'none';
+    		document.getElementById('png_download').style.display = 'none';
+    		document.getElementById('Export2').style.display = 'none';
+    		document.getElementById('png_download2').style.display = 'none';
+  		}
 		
 		
 
@@ -346,8 +321,8 @@
 			<option value='Unknown'>Unknown</option>
 		</select><br>
 		<div class = 'button_container' style = 'display:inline-flex;'>
-          <button type='submit' onclick='show_downloads();'>Submit</button><br>
-          <button type='button' onclick='reset_button(anchors_reappear);'>Reset</button>
+          <button type='submit' onclick='showAnchors();'>Submit</button><br>
+          <button type='button' onclick='reset_button(); hideAnchors();'>Reset</button>
         </div>
 		
 
