@@ -66,6 +66,7 @@ let pieChart = null;
 let pieChart_2 = null;
 let tableChart = null;
 let tableChart_2 = null;
+$("#total_filter_slider").hide();
 
 
 //Code to create the first pie chart and table
@@ -185,14 +186,7 @@ function create_piechart_2(data2) {
 let isSubmit = false;
 
 function reset1() {
-  $("#table_choice").html(`
-    <option value = "" disabled selected>Select a Species</option>
-    <option value = "Betafish">Betafish</option>
-    <option value = "HumanT2T">HumanT2T</option>
-    <option value = "Molerat">Molerat</option>
-    <option value = "Pufferfish">Pufferfish</option>`
-    
-  );
+  $("#table_choice").val('')
   $("#pie_chart").empty();
   $("#data_table").empty();
   $("#total_filter_slider").hide();
@@ -218,24 +212,25 @@ function submitHandeling(chartType) {
     $("#total_filter_slider_2").hide();
     return;
   }
-
-  $("#total_filter_slider").show();
-  $("#total_filter_slider_2").show();
   
   if(chartType === 'chart1') {
     let tableChoice = $("#table_choice").val();
-    if (tableChoice.length === 0) {
-      alert("Error: Please select a species from the dropdown menu");
+    if (tableChoice === "") {
+      alert("Error: Please enter a species of choice in the text box");
+      $("#total_filter_slider").hide();
       return;
     }
+    $("#total_filter_slider").show();
     google_piechart();
   }
   else if (chartType === 'chart2'){
     let transposonChoice = $("#transposon_choice").val();
     if(transposonChoice === "") {
       alert("Error: Please enter a transposon of choice in the text box");
+      $("#total_filter_slider_2").hide();
       return;
     }
+    $("#total_filter_slider_2").show();
     google_piechart_2();
   }
 }
@@ -250,7 +245,7 @@ function download_csv_1(stop){
   stop.preventDefault();
 
   if(!isSubmit) {
-    alert("Error: Please click submit first to generate the pie chart and table!");
+    alert("Error: No content avaliable. Please make sure to select a species name and click submit in order to generate the pie chart and table!");
     return;
   }
 
@@ -277,7 +272,7 @@ function download_csv_2(stop){
   stop.preventDefault();
 
   if(!isSubmit) {
-    alert("Error: Please click submit first to generate the pie chart and table!");
+    alert("Error: No content avaliable. Please make sure to select a species name and click submit in order to generate the pie chart and table!");
     return;
   }
   if (!global_data2) {
@@ -304,7 +299,7 @@ function download_piechart_1 (event) {
 
   event.preventDefault();
   if (!isSubmit) {
-    alert("Error: Please click submit first to generate the pie chart and table!")
+    alert("Error: No content avaliable. Please make sure to select a species name and click submit in order to generate the pie chart and table!")
     
     return;
     }
@@ -329,7 +324,7 @@ function download_piechart_1 (event) {
 function download_piechart_2 (event) {
   event.preventDefault();
   if (!isSubmit) {
-    alert("Error: Please click submit first to generate the pie chart and table!");
+    alert("Error: No content avaliable. Please make sure to select a species name and click submit in order to generate the pie chart and table!");
     return;
   }
 
@@ -392,14 +387,10 @@ document.addEventListener('DOMContentLoaded', function() {
     <div class = "left-column">
       <form onsubmit="event.preventDefault(); submitHandeling('chart1')">
         <h2>Transposon Orders By Species</h2>
-        <label for = "table_choice">Instructions: Please select which species you would like transposon orders displayed for:</label><br>
-        <select id = 'table_choice' name = 'table_choice'>
-          <option value = "" disabled selected>Select a Species</option>
-          <option value = "Betafish">Betafish</option>
-          <option value = "HumanT2T">HumanT2T</option>
-          <option value = "Molerat">Molerat</option>
-          <option value = "Pufferfish">Pufferfish</option>
-        </select><br><br>
+        <label for = "table_choice">Instructions: Please select which species you would like transposon orders displayed for.
+          Options Include: Betafish, HumanT2T, Molerat, and Pufferfish
+        </label><br>
+        <input type='text' id='table_choice' name='table_choice', placeholder="Enter a Species Name"><br><br>
         <div class = "buttons_container" style = "display:inline-flex;">
           <button type= "submit" >Submit</button><br>
           <button type = "button" onclick = "reset1()">Reset</button>
