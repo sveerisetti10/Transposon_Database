@@ -15,11 +15,14 @@
 
 function google_piechart() {
     let tableChoice = $("#table_choice").val();
+    if(!tableChoice){
+      return;
+    }
     //Clear out any previous visualizations from the divisions
     $("#pie_chart").empty()
     $("#data_table").empty()
     if (tableChoice == ""){
-      alert("There is no text in the species name text box");
+      alert("Error: There is no text in the species name text box");
     }
     //We reference the Python Script that will give us the sorted transposon orders
     $.get("https://bioed.bu.edu/cgi-bin/students_23/sv/search_order.py",
@@ -35,10 +38,13 @@ function google_piechart() {
 
 function google_piechart_2() {
     let transposonChoice = $("#transposon_choice").val();
+    if(!transposonChoice){
+      return;
+    }
     $("#pie_chart_2").empty()
     $("#data_table_2").empty()
     if (transposonChoice == ""){
-      alert("There is no text in the transposon choice text box");
+      alert("Error: There is no text in the transposon choice text box");
     }
     $("#transposon_order_heading").text(`Occurences of ` + transposonChoice + ` within the Betta splendens, Takifugu rubripes, Heterocephalus
     glaber, and Homo sapiens species`);
@@ -66,7 +72,7 @@ let tableChart_2 = null;
 function create_piechart(data) {
     global_data1 = data;
     if (data.length === 0) {
-        alert('There was no data for the table choice.');
+        alert('Error: There was no data for the table choice.');
         return;
     }
 
@@ -123,7 +129,7 @@ function create_piechart(data) {
 function create_piechart_2(data2) {
     global_data2 = data2;
     if (data2.length === 0) {
-        alert('There was no data for the table choice.');
+        alert('Error: There was no data for the transposon of choice.');
         return;
     }
 
@@ -176,28 +182,60 @@ function create_piechart_2(data2) {
     dashboard_2.draw(dataTable);
 }
 
+let isSubmit = false;
 
 function reset1() {
-  $("#table_choice").val("Betafish")
+  $("#table_choice").html(`
+    <option value = "" disabled selected>Select a Species</option>
+    <option value = "Betafish">Betafish</option>
+    <option value = "HumanT2T">HumanT2T</option>
+    <option value = "Molerat">Molerat</option>
+    <option value = "Pufferfish">Pufferfish</option>`
+    
+  );
   $("#pie_chart").empty();
   $("#data_table").empty();
+  $("#total_filter_slider").hide();
+
+  isSubmit = false;
 }
+
+
 
 function reset2() {
-  $("#transposon_choice").val("LINE")
+  $("#transposon_choice").val('')
   $("#pie_chart_2").empty();
   $("#data_table_2").empty();
+  $("#total_filter_slider_2").hide();
+  isSubmit = false;
 }
 
-
-let isSubmit = false;
 
 function submitHandeling(chartType) {
   isSubmit = true;
+  if(chartType === "reset"){
+    $("#total_filter_slider").hide();
+    $("#total_filter_slider_2").hide();
+    return;
+  }
+
+  $("#total_filter_slider").show();
+  $("#total_filter_slider_2").show();
+  
   if(chartType === 'chart1') {
+    let tableChoice = $("#table_choice").val();
+    if (tableChoice.length === 0) {
+      alert("Error: Please select a species from the dropdown menu");
+      return;
+    }
     google_piechart();
   }
   else if (chartType === 'chart2'){
+    let transposonChoice = $("#transposon_choice").val();
+    if(transposonChoice === "") {
+      alert("Error: Please enter a transposon of choice in the text box");
+      return;
+    }
     google_piechart_2();
   }
 }
@@ -212,12 +250,12 @@ function download_csv_1(stop){
   stop.preventDefault();
 
   if(!isSubmit) {
-    alert("Please click submit first to generate the pie chart and table!");
+    alert("Error: Please click submit first to generate the pie chart and table!");
     return;
   }
 
   if (!global_data1) {
-    alert("There is not a table ready for download");
+    alert("Error: There is not a table ready for download");
     return;
   }
 
@@ -239,11 +277,11 @@ function download_csv_2(stop){
   stop.preventDefault();
 
   if(!isSubmit) {
-    alert("Plase click submit first to generate the pie chart and table!");
+    alert("Error: Please click submit first to generate the pie chart and table!");
     return;
   }
   if (!global_data2) {
-    alert("There is no table available to download");
+    alert("Error: There is no table available to download");
     return;
   }
 
@@ -266,13 +304,13 @@ function download_piechart_1 (event) {
 
   event.preventDefault();
   if (!isSubmit) {
-    alert("Please click submit first to generate the pie chart and table!")
+    alert("Error: Please click submit first to generate the pie chart and table!")
     
     return;
     }
 
   if(!global_data1) {
-    alert("There is no pie chart avaliable to download");
+    alert("Error: There is no pie chart avaliable to download");
     return;
   }
 
@@ -291,18 +329,18 @@ function download_piechart_1 (event) {
 function download_piechart_2 (event) {
   event.preventDefault();
   if (!isSubmit) {
-    alert("Please click submit first to generate the pie chart and table!");
+    alert("Error: Please click submit first to generate the pie chart and table!");
     return;
   }
 
   if(!global_data2) {
-    alert("There is not a pie chart avaliable for you to download");
+    alert("Error: There is not a pie chart avaliable for you to download");
     return;
   }
   
   var pieChartsaving2= pieChart_2.getChart();
   if(!pieChartsaving2) {
-    alert("wait for the pie chart to load please");
+    alert("Error: Wait for the pie chart to load please");
     return;
   }
   var imgURL = pieChartsaving2.getImageURI();
@@ -356,6 +394,7 @@ document.addEventListener('DOMContentLoaded', function() {
         <h2>Transposon Orders By Species</h2>
         <label for = "table_choice">Instructions: Please select which species you would like transposon orders displayed for:</label><br>
         <select id = 'table_choice' name = 'table_choice'>
+          <option value = "" disabled selected>Select a Species</option>
           <option value = "Betafish">Betafish</option>
           <option value = "HumanT2T">HumanT2T</option>
           <option value = "Molerat">Molerat</option>
@@ -389,7 +428,7 @@ document.addEventListener('DOMContentLoaded', function() {
           in a particular species.
           (Examples Include: LINE, SINE, DNA/Maverick): 
         </label>
-        <input type='text' id='transposon_choice' name='transposon_choice', value = "LINE"><br><br>
+        <input type='text' id='transposon_choice' name='transposon_choice', placeholder="Enter a Transposon"><br><br>
         <div class = "buttons_container" style = "display:inline-flex;">
           <button type="submit" >Submit</button><br>
           <button type = "button" onclick = "reset2()">Reset</button>
